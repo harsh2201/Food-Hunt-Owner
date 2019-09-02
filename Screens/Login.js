@@ -1,37 +1,53 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { LinearGradient } from "expo";
+import { StyleSheet, Text, View, ImageBackground, Image } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Image from "react-native-remote-svg";
+// import  from "react-native-remote-svg";
 
 export default class Login extends Component {
   render() {
     return (
-      <LinearGradient
-        colors={["#ffe259", "#ffa751"]}
-        style={{ flex: 1 }}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-      >
-        <View style={styles.container}>
-          <Text style={styles.text}>foodHUNT</Text>
-        </View>
-        <View style={styles.button}>
-          <TouchableOpacity style={styles.buttonText}>
-            <Image source={require("../assets/facebook.svg")} />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonText}>
-            <Image source={require("../assets/google.svg")} />
-          </TouchableOpacity>
-        </View>
-      </LinearGradient>
+      <View style={{ flex: 1 }}>
+        <LinearGradient
+          colors={["#FD6E6A", "#FFC600"]}
+          style={{ flex: 1 }}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        >
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <View style={styles.container}>
+              <Text style={styles.text}>FoodHunt</Text>
+            </View>
+            <View style={styles.button}>
+              <TouchableOpacity
+                style={styles.buttonText}
+                onPress={() => {
+                  console.log("Hello FB");
+                  this.props.navigation.navigate("Navigator");
+                }}
+              >
+                <Image
+                  style={{ height: 10 }}
+                  source={require("../assets/facebook.png")}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonText}>
+                <Image
+                  style={{ height: 10 }}
+                  source={require("../assets/google.png")}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </LinearGradient>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
+    // position: "relative",
     top: "25%",
     left: 0,
     right: 0
@@ -39,7 +55,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 40,
     textAlign: "center",
-    color: "white",
+    color: "orange",
     fontWeight: "bold"
   },
   button: {
@@ -59,6 +75,7 @@ const styles = StyleSheet.create({
     borderColor: "#fff"
   },
   buttonText: {
+    flex: 1,
     textAlign: "center",
     paddingRight: 15,
     paddingLeft: 15
