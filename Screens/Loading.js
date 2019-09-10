@@ -28,6 +28,7 @@ class Loading extends Component {
           source={require("../assets/Lottie/cooking.json")}
           // progress={this.state.progress}
           autoPlay={true}
+          speed={1.25}
         />
         <Text style={styles.text}>Loading...</Text>
       </View>
