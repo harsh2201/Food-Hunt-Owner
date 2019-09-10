@@ -1,14 +1,13 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, Easing, Animated } from "react-native";
-import {
-  createAppContainer,
-  createSwitchNavigator,
-  createStackNavigator
-} from "react-navigation";
+import { View, StyleSheet, Easing, Animated } from "react-native";
+import { createAppContainer } from "react-navigation";
+import createAnimatedSwitchNavigator from "react-navigation-animated-switch";
+import { Transition } from "react-native-reanimated";
+// import { createStackNavigator } from "react-navigation-stack";
+
 import Navigator from "./Navigation/Navigator";
 import Login from "./Screens/Login";
-// import {  } from "expo";
-import { zoomOut } from "react-navigation-transitions";
+import Loading from "./Screens/Loading";
 
 export default class FoodHunt extends Component {
   render() {
@@ -21,65 +20,23 @@ export default class FoodHunt extends Component {
 }
 // export default FoodHunt;
 
-const AppSwitchNavigator = createStackNavigator(
+const AppSwitchNavigator = createAnimatedSwitchNavigator(
   {
+    Loading: Loading,
     Login: Login,
     Navigator: Navigator
   },
   {
-    headerMode: "none",
-    mode: "modal",
-    defaultNavigationOptions: {
-      gesturesEnabled: false
-    },
-    transitionConfig: () => ({
-      transitionSpec: {
-        duration: 350,
-        // easing: Easing.easeOutExpo,
-        timing: Animated.timing
-      },
-      screenInterpolator: sceneProps => {
-        const { position, layout, scene, index, scenes } = sceneProps;
-
-        const thisSceneIndex = scene.index;
-        const height = layout.initHeight;
-        const width = layout.initWidth;
-
-        var thisSceneParams = scene.route.params || {};
-
-        const translateX = position.interpolate({
-          inputRange: [thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1],
-          outputRange: [width, 0, 0]
-        });
-
-        const translateY = position.interpolate({
-          inputRange: [thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1],
-          outputRange: [height, 0, 0]
-        });
-
-        const opacity = position.interpolate({
-          inputRange: [
-            thisSceneIndex - 1,
-            thisSceneIndex - 0.5,
-            thisSceneIndex
-          ],
-          outputRange: [0, 1, 1]
-        });
-
-        const scale = position.interpolate({
-          inputRange: [thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1],
-          outputRange: [4, 1, 1]
-        });
-
-        const slideFromRight = { transform: [{ translateX }] };
-        const scaleWithOpacity = {
-          opacity,
-          transform: [{ scaleX: scale }, { scaleY: scale }]
-        };
-        const slideInFromBottom = { transform: [{ translateY }] };
-        return scaleWithOpacity;
-      }
-    })
+    transition: (
+      <Transition.Together>
+        <Transition.Out
+          type="slide-bottom"
+          durationMs={400}
+          interpolation="easeIn"
+        />
+        <Transition.In type="fade" durationMs={500} />
+      </Transition.Together>
+    )
   }
 );
 

@@ -1,16 +1,10 @@
 import * as React from "react";
-import { View, Dimensions, StyleSheet, Text } from "react-native";
-import { BottomNavigation, Paragraph } from "react-native-paper";
-import * as Font from "expo-font";
+import { View, Dimensions, StyleSheet } from "react-native";
+import { BottomNavigation } from "react-native-paper";
+import Text from "../data/customText";
 
 export default class Navigator extends React.Component {
   static title = "Bottom Navigation";
-
-  async componentDidMount() {
-    await Font.loadAsync({
-      Nuni: require("../assets/fonts/Nunito-Regular.ttf")
-    });
-  }
 
   state = {
     index: 0,
@@ -57,8 +51,7 @@ export default class Navigator extends React.Component {
                     justifyContent: "center",
                     alignItems: "center",
                     textAlign: "center",
-                    fontSize: 30,
-                    fontFamily: "Nuni"
+                    fontSize: 30
                   }}
                 >
                   Home
@@ -74,8 +67,7 @@ export default class Navigator extends React.Component {
                     justifyContent: "center",
                     alignItems: "center",
                     textAlign: "center",
-                    fontSize: 30,
-                    fontFamily: "Nuni"
+                    fontSize: 30
                   }}
                 >
                   Favourites
@@ -91,8 +83,7 @@ export default class Navigator extends React.Component {
                     justifyContent: "center",
                     alignItems: "center",
                     textAlign: "center",
-                    fontSize: 30,
-                    fontFamily: "Nuni"
+                    fontSize: 30
                   }}
                 >
                   Profile
@@ -109,7 +100,6 @@ export default class Navigator extends React.Component {
                     alignItems: "center",
                     textAlign: "center",
                     fontSize: 30,
-                    fontFamily: "Nuni",
                     color: "#fff"
                   }}
                 >

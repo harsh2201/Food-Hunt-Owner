@@ -1,25 +1,30 @@
 {
   "expo": {
     "name": "Food Hunt",
-    "slug": "ThirdSimple",
+    "slug": "FoodHunt",
     "privacy": "public",
     "sdkVersion": "34.0.0",
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "facebookScheme": "fb2917030818370588",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/posterSquare.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/foodHuntLogo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_LOAD"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "bundleIdentifier": "foodhunt.charusat.harsh2201",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "foodhunt.charusat.harsh2201"
     }
   }
 }
