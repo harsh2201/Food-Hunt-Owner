@@ -16,9 +16,11 @@ class Loading extends Component {
       } else {
         this.props.navigation.navigate("Login");
       }
-      this.setState({});
+      // this.setState({});
     });
   };
+
+  // #333333
 
   render() {
     return (

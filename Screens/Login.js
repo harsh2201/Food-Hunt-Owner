@@ -158,6 +158,15 @@ export default class Login extends Component {
           style={{ flex: 1 }}
           source={require("../assets/loginBack.png")}
         >
+          {/* <View style={{ height: screenHeight / 3 }}>
+            <LottieView
+              style={styles.loader}
+              source={require("../assets/Lottie/login.json")}
+              // progress={this.state.progress}
+              autoPlay={true}
+              speed={5}
+            />
+          </View> */}
           <View style={{ flex: 1, alignItems: "center" }}>
             <View style={styles.container}>
               <View style={styles.logoContainer}>
