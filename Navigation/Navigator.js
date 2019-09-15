@@ -2,6 +2,8 @@ import * as React from "react";
 import { View, Dimensions, StyleSheet } from "react-native";
 import { BottomNavigation } from "react-native-paper";
 import Text from "../data/customText";
+import MessNavigation from "../Navigation/MessNavigation";
+// import SparkButton from "react-native-sparkbutton";
 
 export default class Navigator extends React.Component {
   static title = "Bottom Navigation";
@@ -28,9 +30,9 @@ export default class Navigator extends React.Component {
         color: "#F75728"
       },
       {
-        key: "aboutUs",
-        title: "About Us",
-        icon: "info",
+        key: "developers",
+        title: "Developers",
+        icon: "code",
         color: "#000"
       }
     ]
@@ -44,24 +46,20 @@ export default class Navigator extends React.Component {
         onIndexChange={index => this.setState({ index })}
         renderScene={BottomNavigation.SceneMap({
           home: () => {
-            return (
-              <View style={styles.content}>
-                <Text
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    textAlign: "center",
-                    fontSize: 30
-                  }}
-                >
-                  Home
-                </Text>
-              </View>
-            );
+            return <MessNavigation />;
           },
           favorites: () => {
             return (
               <View style={[styles.content]}>
+                {/* <SparkButton
+                  style={{ width: 100, height: 100 }}
+                  activeImageSrc={require("../assets/facebook.png")}
+                  inactiveImageTint={"rgba(255,255,255,0.8)"}
+                  primaryColor={"yellow"}
+                  secondaryColor={"red"}
+                  animationSpeed={1}
+                  checked={false}
+                /> */}
                 <Text
                   style={{
                     justifyContent: "center",
@@ -91,7 +89,7 @@ export default class Navigator extends React.Component {
               </View>
             );
           },
-          aboutUs: () => {
+          developers: () => {
             return (
               <View style={[styles.content, { backgroundColor: "#000" }]}>
                 <Text

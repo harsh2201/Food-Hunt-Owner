@@ -60,7 +60,7 @@ export default class EventList extends React.Component {
             }
           ];
 
-          console.log(te);
+          // console.log(te);
           var temp = [];
 
           var rat = 1;
@@ -88,7 +88,7 @@ export default class EventList extends React.Component {
           this.setState({
             data: te
           });
-          console.log(this.state.data);
+          // console.log(this.state.data);
         }.bind(this)
       );
   }
