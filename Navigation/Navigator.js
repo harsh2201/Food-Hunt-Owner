@@ -8,7 +8,7 @@ export default class Navigator extends React.Component {
 
   async componentDidMount() {
     await Font.loadAsync({
-      Nuni: require("../assets/fonts/Nunito-Regular.ttf")
+      Nuni: require("./assets/fonts/Nunito-Regular.ttf")
     });
   }
 

@@ -7,10 +7,10 @@ import {
 } from "react-navigation";
 import Navigator from "./Navigation/Navigator";
 import Login from "./Screens/Login";
-// import {  } from "expo";
+import menuScreen from "./Screens/menuScreen"
 import { zoomOut } from "react-navigation-transitions";
 
-export default class FoodHunt extends Component {
+class FoodHunt extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -19,10 +19,11 @@ export default class FoodHunt extends Component {
     );
   }
 }
-// export default FoodHunt;
+export default FoodHunt;
 
 const AppSwitchNavigator = createStackNavigator(
   {
+    menuScreen:menuScreen,
     Login: Login,
     Navigator: Navigator
   },

@@ -1,9 +1,5 @@
 import React, { Component } from "react";
-<<<<<<< HEAD
-import { StyleSheet, Text, View } from "react-native";
-=======
 import { StyleSheet, Text, View, ImageBackground, Image } from "react-native";
->>>>>>> 8cba91c53120d1b1d38bda34c6ec8c3938ea79e1
 import { LinearGradient } from "expo-linear-gradient";
 import { TouchableOpacity } from "react-native-gesture-handler";
 // import  from "react-native-remote-svg";
