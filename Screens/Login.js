@@ -88,7 +88,7 @@ export default class Login extends Component {
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           var database = firebase.database();
-          console.log(user);
+          // console.log(user);
           database.ref("Users/" + user.uid + "/").set({
             name: user.displayName,
             photoURL: user.photoURL,
@@ -132,7 +132,7 @@ export default class Login extends Component {
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           var database = firebase.database();
-          console.log(user);
+          // console.log(user);
           // console.log(firebase.auth().currentUser);
           database.ref("Users/" + user.uid + "/").set({
             name: user.displayName,
