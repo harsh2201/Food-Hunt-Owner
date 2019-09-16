@@ -56,38 +56,6 @@ export default class HomeScreen extends React.Component {
         }.bind(this)
       );
   }
-
-  user = [
-    {
-      name: "Gujarati Food",
-      time: "11:00 AM",
-      EndTime: "1:00 PM",
-      Quantity: "Limited",
-      images: "https://bit.ly/CZHarshAvatar"
-    },
-    {
-      name: "Mexican Food",
-      time: "11:00 AM",
-      EndTime: "1:00 PM",
-      Quantity: "Limited",
-      images: "https://bit.ly/CZShivamAvatar"
-    },
-    {
-      name: "Punjabi Food",
-      time: "11:00 AM",
-      EndTime: "1:00 PM",
-      Quantity: "Limited",
-      images: "https://bit.ly/CZHarshAvatar"
-    },
-    {
-      name: "Punjabi Food",
-      time: "11:00 AM",
-      EndTime: "1:00 PM",
-      Quantity: "Limited",
-      images: "https://bit.ly/CZShivamAvatar"
-    }
-  ];
-
   data = [
     {
       label: "Filter",
@@ -107,9 +75,9 @@ export default class HomeScreen extends React.Component {
     }
   ];
 
-  updateSearch = search => {
-    this.setState({ search });
-  };
+  // updateSearch = search => {
+  //   this.setState({ search });
+  // };
   render() {
     const { search } = this.state;
     return (
@@ -182,12 +150,13 @@ export default class HomeScreen extends React.Component {
         </View>
 
         {/* search and filter portion */}
-        <View style={{ flex: 2, flexDirection: "row" }}>
+        <View style={{ flex: 2, flexDirection: "row",height: hp('7%'),paddingTop: hp('1%') }}>
           <View style={styles.search_s}>
             <SearchBar
               lightTheme
-              icon={{ type: "font-awesome", name: "search" }}
-              placeholder="Type Here..."
+              placeholder="Search"
+              onChangeText={query => { this.setState({ search: query }); }}
+              value={search}
             />
           </View>
 
@@ -198,6 +167,13 @@ export default class HomeScreen extends React.Component {
               justifyContent: "center"
             }}
           >
+            <TouchableOpacity>
+            <Image source={{
+              uri:"https://cdn.iconscout.com/icon/premium/png-256-thumb/filter-30-204031.png"
+              }} style={{ height: hp("7%"), width: wp("14%")}} />
+            </TouchableOpacity>
+            
+            
             <Picker
               mode="dropdown"
               style={{
