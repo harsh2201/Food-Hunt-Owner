@@ -43,15 +43,10 @@ export default class HomeScreen extends React.Component {
             te.push({
               name: element.name,
               mid: element.Credentials.mid,
-              mid: element.Credentials.mid,
               time: element.time.lunch.open + " - " + element.time.lunch.close,
-              email: element.Contact.email,
-              mobileNo: element.Contact.mobileNo,
+              // rating: rat,
               profileUrl: element.profileUrl,
-              limited: element.limited,
-              address: element.address,
-              avgCost: element.avgCost,
-              views: element.views
+              limited: element.limited
             });
           }
           this.setState({
@@ -62,6 +57,36 @@ export default class HomeScreen extends React.Component {
       );
   }
 
+  user = [
+    {
+      name: "Gujarati Food",
+      time: "11:00 AM",
+      EndTime: "1:00 PM",
+      Quantity: "Limited",
+      images: "https://bit.ly/CZHarshAvatar"
+    },
+    {
+      name: "Mexican Food",
+      time: "11:00 AM",
+      EndTime: "1:00 PM",
+      Quantity: "Limited",
+      images: "https://bit.ly/CZShivamAvatar"
+    },
+    {
+      name: "Punjabi Food",
+      time: "11:00 AM",
+      EndTime: "1:00 PM",
+      Quantity: "Limited",
+      images: "https://bit.ly/CZHarshAvatar"
+    },
+    {
+      name: "Punjabi Food",
+      time: "11:00 AM",
+      EndTime: "1:00 PM",
+      Quantity: "Limited",
+      images: "https://bit.ly/CZShivamAvatar"
+    }
+  ];
 
   data = [
     {

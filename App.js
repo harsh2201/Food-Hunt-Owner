@@ -18,6 +18,7 @@ class App extends Component {
   }
 
   async componentDidMount() {
+    console.ignoredYellowBox = ["Setting a timer"];
     await Font.loadAsync({
       Nuni: require("./assets/fonts/Nunito-Regular.ttf")
     });
