@@ -8,6 +8,7 @@ import { Transition } from "react-native-reanimated";
 import Navigator from "./Navigation/Navigator";
 import Login from "./Screens/Login";
 import Loading from "./Screens/Loading";
+// import MessDetail from "./Screens/menuScreen";
 
 export default class FoodHunt extends Component {
   render() {
@@ -22,6 +23,7 @@ export default class FoodHunt extends Component {
 
 const AppSwitchNavigator = createAnimatedSwitchNavigator(
   {
+    // mess: MessDetail,
     Loading: Loading,
     Login: Login,
     Navigator: Navigator

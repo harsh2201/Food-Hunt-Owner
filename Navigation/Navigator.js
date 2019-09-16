@@ -3,6 +3,7 @@ import { View, Dimensions, StyleSheet } from "react-native";
 import { BottomNavigation } from "react-native-paper";
 import Text from "../data/customText";
 import MessNavigation from "../Navigation/MessNavigation";
+import Developers from "../Screens/Developers";
 // import SparkButton from "react-native-sparkbutton";
 
 export default class Navigator extends React.Component {
@@ -51,15 +52,6 @@ export default class Navigator extends React.Component {
           favorites: () => {
             return (
               <View style={[styles.content]}>
-                {/* <SparkButton
-                  style={{ width: 100, height: 100 }}
-                  activeImageSrc={require("../assets/facebook.png")}
-                  inactiveImageTint={"rgba(255,255,255,0.8)"}
-                  primaryColor={"yellow"}
-                  secondaryColor={"red"}
-                  animationSpeed={1}
-                  checked={false}
-                /> */}
                 <Text
                   style={{
                     justifyContent: "center",
@@ -90,21 +82,7 @@ export default class Navigator extends React.Component {
             );
           },
           developers: () => {
-            return (
-              <View style={[styles.content, { backgroundColor: "#000" }]}>
-                <Text
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    textAlign: "center",
-                    fontSize: 30,
-                    color: "#fff"
-                  }}
-                >
-                  About Us
-                </Text>
-              </View>
-            );
+            return <Developers />;
           }
         })}
       />

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, StatusBar, SafeAreaView } from "react-native";
 import FoodHunt from "./FoodHunt";
 import * as Font from "expo-font";
 import * as firebase from "firebase";
@@ -33,7 +33,9 @@ class App extends Component {
           <View />
         ) : (
           <View style={styles.container}>
+            {/* <SafeAreaView> */}
             <FoodHunt />
+            {/* </SafeAreaView> */}
           </View>
         )}
       </View>
@@ -45,5 +47,6 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1
+    // paddingTop: StatusBar.currentHeight / 2
   }
 });

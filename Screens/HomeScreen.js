@@ -43,10 +43,15 @@ export default class HomeScreen extends React.Component {
             te.push({
               name: element.name,
               mid: element.Credentials.mid,
+              mid: element.Credentials.mid,
               time: element.time.lunch.open + " - " + element.time.lunch.close,
-              // rating: rat,
+              email: element.Contact.email,
+              mobileNo: element.Contact.mobileNo,
               profileUrl: element.profileUrl,
-              limited: element.limited
+              limited: element.limited,
+              address: element.address,
+              avgCost: element.avgCost,
+              views: element.views
             });
           }
           this.setState({

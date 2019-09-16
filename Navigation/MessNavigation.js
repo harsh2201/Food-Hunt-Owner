@@ -4,26 +4,27 @@ import Text from "../data/customText";
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 import HomeScreen from "../Screens/HomeScreen";
+import MessDetail from "../Screens/MessDetail";
 import { Transition } from "react-native-reanimated";
 
-class MessNavigation extends Component {
-  render() {
-    const { navigation } = this.props;
-    let data = navigation.getParam("mess");
-    console.log(data);
+// class MessNavigation extends Component {
+//   render() {
+//     const { navigation } = this.props;
+//     let data = navigation.getParam("mess");
+//     console.log(data);
 
-    return (
-      <View style={styles.container}>
-        <Text>{}</Text>
-      </View>
-    );
-  }
-}
+//     return (
+//       <View style={styles.container}>
+//         <Text>{}</Text>
+//       </View>
+//     );
+//   }
+// }
 
 const AppSwitchNavigator = createStackNavigator(
   {
     MessList: HomeScreen,
-    MessDetail: MessNavigation
+    MessDetail: MessDetail
   },
   {
     headerMode: "none",
@@ -45,8 +46,6 @@ const AppSwitchNavigator = createStackNavigator(
 );
 
 export default AppNavigator = createAppContainer(AppSwitchNavigator);
-
-// export default MessNavigation;
 
 const styles = StyleSheet.create({
   container: {
