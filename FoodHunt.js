@@ -1,20 +1,46 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { createAppContainer, createSwitchNavigator } from "react-navigation";
+import { View, StyleSheet, Easing, Animated } from "react-native";
+import { createAppContainer } from "react-navigation";
+import createAnimatedSwitchNavigator from "react-navigation-animated-switch";
+import { Transition } from "react-native-reanimated";
+// import { createStackNavigator } from "react-navigation-stack";
+
 import Navigator from "./Navigation/Navigator";
 import Login from "./Screens/Login";
+import Loading from "./Screens/Loading";
+// import MessDetail from "./Screens/menuScreen";
 
 export default class FoodHunt extends Component {
   render() {
-    return <AppNavigator />;
+    return (
+      <View style={styles.container}>
+        <AppNavigator />
+      </View>
+    );
   }
 }
 // export default FoodHunt;
 
-const AppSwitchNavigator = createSwitchNavigator({
-  Login: Login,
-  Navigator: Navigator
-});
+const AppSwitchNavigator = createAnimatedSwitchNavigator(
+  {
+    // mess: MessDetail,
+    Loading: Loading,
+    Login: Login,
+    Navigator: Navigator
+  },
+  {
+    transition: (
+      <Transition.Together>
+        <Transition.Out
+          type="slide-bottom"
+          durationMs={400}
+          interpolation="easeIn"
+        />
+        <Transition.In type="fade" durationMs={500} />
+      </Transition.Together>
+    )
+  }
+);
 
 const AppNavigator = createAppContainer(AppSwitchNavigator);
 

@@ -1,22 +1,10 @@
 import * as React from "react";
-import { ScrollView, View, Image, Dimensions, StyleSheet } from "react-native";
+import { View, Dimensions, StyleSheet } from "react-native";
 import { BottomNavigation } from "react-native-paper";
-
-const PhotoGallery = ({ route }) => {
-  const PHOTOS = Array.from({ length: 24 }).map(
-    (_, i) => `https://unsplash.it/300/300/?random&__id=${route.key}${i}`
-  );
-
-  return (
-    <ScrollView contentContainerStyle={styles.content}>
-      {PHOTOS.map(uri => (
-        <View key={uri} style={styles.item}>
-          <Image source={{ uri }} style={styles.photo} />
-        </View>
-      ))}
-    </ScrollView>
-  );
-};
+import Text from "../data/customText";
+import MessNavigation from "../Navigation/MessNavigation";
+import Developers from "../Screens/Developers";
+// import SparkButton from "react-native-sparkbutton";
 
 export default class Navigator extends React.Component {
   static title = "Bottom Navigation";
@@ -24,24 +12,29 @@ export default class Navigator extends React.Component {
   state = {
     index: 0,
     routes: [
-      { key: "album", title: "Album", icon: "photo-album", color: "#6200ee" },
       {
-        key: "library",
-        title: "Library",
-        icon: "inbox",
-        color: "#2962ff"
+        key: "home",
+        title: "Home",
+        icon: "home",
+        color: "#039b3b"
       },
       {
         key: "favorites",
         title: "Favorites",
         icon: "favorite",
-        color: "#00796b"
+        color: "#E81B38"
       },
       {
-        key: "purchased",
-        title: "Purchased",
-        icon: "shop",
-        color: "#c51162"
+        key: "profile",
+        title: "Profile",
+        icon: "person",
+        color: "#F75728"
+      },
+      {
+        key: "developers",
+        title: "Developers",
+        icon: "code",
+        color: "#000"
       }
     ]
   };
@@ -49,13 +42,48 @@ export default class Navigator extends React.Component {
   render() {
     return (
       <BottomNavigation
+        // style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         navigationState={this.state}
         onIndexChange={index => this.setState({ index })}
         renderScene={BottomNavigation.SceneMap({
-          album: PhotoGallery,
-          library: PhotoGallery,
-          favorites: PhotoGallery,
-          purchased: PhotoGallery
+          home: () => {
+            return <MessNavigation />;
+          },
+          favorites: () => {
+            return (
+              <View style={[styles.content]}>
+                <Text
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    fontSize: 30
+                  }}
+                >
+                  Favourites
+                </Text>
+              </View>
+            );
+          },
+          profile: () => {
+            return (
+              <View style={[styles.content]}>
+                <Text
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    textAlign: "center",
+                    fontSize: 30
+                  }}
+                >
+                  Profile
+                </Text>
+              </View>
+            );
+          },
+          developers: () => {
+            return <Developers />;
+          }
         })}
       />
     );
@@ -64,9 +92,13 @@ export default class Navigator extends React.Component {
 
 const styles = StyleSheet.create({
   content: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    padding: 4
+    flex: 1,
+    // flexDirection: "row",
+    // flexWrap: "wrap",
+    padding: 4,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#ecf0f1"
   },
   item: {
     height: Dimensions.get("window").width / 2,
