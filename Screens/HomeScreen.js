@@ -6,25 +6,32 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  TouchableHighlight
+  TouchableHighlight,
+  Button
 } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import Carousel from "react-native-anchor-carousel";
-import { SearchBar } from "react-native-elements";
+import { SearchBar, Rating } from "react-native-elements";
 import { Container, Card, Picker } from "native-base";
 import * as firebase from "firebase";
+import Modal from "react-native-modal";
 //import {Icon} from 'react-native-vector-icons ';
 
 export default class HomeScreen extends React.Component {
   state = {
     search: "",
     language: "",
-    user: []
+    user: [],
+    isModalVisible: false
   };
 
+  toggleModal = () => {
+    this.setState({ isModalVisible: !this.state.isModalVisible });
+  };
+ 
   componentDidMount() {
     firebase
       .database()
@@ -75,9 +82,9 @@ export default class HomeScreen extends React.Component {
     }
   ];
 
-  // updateSearch = search => {
-  //   this.setState({ search });
-  // };
+  updateSearch = search => {
+    this.setState({ search });
+  };
   render() {
     const { search } = this.state;
     return (
@@ -98,7 +105,7 @@ export default class HomeScreen extends React.Component {
                     width: wp("98%"),
                     alignItems: "center",
                     borderWidth: 1,
-                    marginRight: wp("1%")
+                    marginRight: wp("1%"),
                   }}
                 >
                   <Image
@@ -149,8 +156,8 @@ export default class HomeScreen extends React.Component {
           </Container>
         </View>
 
-        {/* search and filter portion */}
-        <View style={{ flex: 2, flexDirection: "row",height: hp('7%'),paddingTop: hp('1%') }}>
+        {/* Search portion */}
+        <View style={{ flex: 2, flexDirection: "row",height: hp('7%'),paddingTop: hp('1%'),paddingBottom: hp('7%') }}>
           <View style={styles.search_s}>
             <SearchBar
               lightTheme
@@ -160,39 +167,40 @@ export default class HomeScreen extends React.Component {
             />
           </View>
 
+         {/* Filter */}
           <View
             style={{
-              width: "60%",
+              width: "14%",
               flexDirection: "row",
               justifyContent: "center"
             }}
           >
-            <TouchableOpacity>
+            <TouchableOpacity onPress={this.toggleModal}>
             <Image source={{
               uri:"https://cdn.iconscout.com/icon/premium/png-256-thumb/filter-30-204031.png"
               }} style={{ height: hp("7%"), width: wp("14%")}} />
             </TouchableOpacity>
             
+            <Modal isVisible={this.state.isModalVisible}>
+              <View style={{ flex: 2, flexDirection: "row", height: hp('50%'), width: wp('100%') }}>
+                <View> 
+                  <TouchableOpacity onPress={this.toggleModal} >
+                  <Image source={{
+                      uri:"https://1001freedownloads.s3.amazonaws.com/vector/thumb/70571/close-button.png"
+                      }} style={{ height: hp("5%"), width: wp("5%"),alignSelf: "center"}} />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={{alignSelf: "center", width: wp('70%'), height: hp('50%'), paddingTop: hp('10%'), paddingLeft: wp('10%')}}>
+                  <Button title="Ratings" style={{height: hp('40%'), width: wp('100%'), textAlign: "center"}} />
+                  <Button title="Limited" style={{height: hp('40%'), width: wp('100%'), textAlign: "center"}} />
+                  <Button title="Unlimited" style={{height: hp('40%'), width: wp('100%'), textAlign: "center"}} />
+                  <Button title="Nearest" style={{height: hp('40%'), width: wp('100%'), textAlign: "center"}} />
+                </View> 
+
+              </View>
+            </Modal>
             
-            <Picker
-              mode="dropdown"
-              style={{
-                height: hp("7%"),
-                backgroundColor: "white",
-                width: "14%",
-                justifyContent: "center"
-              }}
-            >
-              {this.data.map(item => {
-                return (
-                  <Picker.Item
-                    label={item.label}
-                    value={item.value}
-                    key={item.value}
-                  />
-                );
-              })}
-            </Picker>
           </View>
         </View>
 
@@ -245,6 +253,12 @@ const styles = StyleSheet.create({
     flex: 5,
     flexDirection: "column"
   },
+  modal:{
+    height: hp('40%'),
+    width: wp('100%'),
+    justifyContent: "center",
+    alignSelf: "center"
+  },
   card_unit: {
     flex: 2,
     flexDirection: "row",
@@ -253,7 +267,7 @@ const styles = StyleSheet.create({
   },
   search_s: {
     height: hp("7%"),
-    width: wp("73%")
+    width: wp("85%")
   },
   dropdown: {
     height: hp("7%"),
