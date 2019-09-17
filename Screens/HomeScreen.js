@@ -31,7 +31,7 @@ export default class HomeScreen extends React.Component {
   toggleModal = () => {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   };
- 
+
   componentDidMount() {
     firebase
       .database()
@@ -105,7 +105,7 @@ export default class HomeScreen extends React.Component {
                     width: wp("98%"),
                     alignItems: "center",
                     borderWidth: 1,
-                    marginRight: wp("1%"),
+                    marginRight: wp("1%")
                   }}
                 >
                   <Image
@@ -157,17 +157,27 @@ export default class HomeScreen extends React.Component {
         </View>
 
         {/* Search portion */}
-        <View style={{ flex: 2, flexDirection: "row",height: hp('7%'),paddingTop: hp('1%'),paddingBottom: hp('7%') }}>
+        <View
+          style={{
+            flex: 2,
+            flexDirection: "row",
+            height: hp("7%"),
+            paddingTop: hp("1%"),
+            paddingBottom: hp("7%")
+          }}
+        >
           <View style={styles.search_s}>
             <SearchBar
               lightTheme
               placeholder="Search"
-              onChangeText={query => { this.setState({ search: query }); }}
+              onChangeText={query => {
+                this.setState({ search: query });
+              }}
               value={search}
             />
           </View>
 
-         {/* Filter */}
+          {/* Filter */}
           <View
             style={{
               width: "14%",
@@ -176,31 +186,84 @@ export default class HomeScreen extends React.Component {
             }}
           >
             <TouchableOpacity onPress={this.toggleModal}>
-            <Image source={{
-              uri:"https://cdn.iconscout.com/icon/premium/png-256-thumb/filter-30-204031.png"
-              }} style={{ height: hp("7%"), width: wp("14%")}} />
+              <Image
+                source={{
+                  uri:
+                    "https://cdn.iconscout.com/icon/premium/png-256-thumb/filter-30-204031.png"
+                }}
+                style={{ height: hp("7%"), width: wp("14%") }}
+              />
             </TouchableOpacity>
-            
+
             <Modal isVisible={this.state.isModalVisible}>
-              <View style={{ flex: 2, flexDirection: "row", height: hp('50%'), width: wp('100%') }}>
-                <View> 
-                  <TouchableOpacity onPress={this.toggleModal} >
-                  <Image source={{
-                      uri:"https://1001freedownloads.s3.amazonaws.com/vector/thumb/70571/close-button.png"
-                      }} style={{ height: hp("5%"), width: wp("5%"),alignSelf: "center"}} />
+              <View
+                style={{
+                  flex: 2,
+                  flexDirection: "row",
+                  height: hp("50%"),
+                  width: wp("100%")
+                }}
+              >
+                <View>
+                  <TouchableOpacity onPress={this.toggleModal}>
+                    <Image
+                      source={{
+                        uri:
+                          "https://1001freedownloads.s3.amazonaws.com/vector/thumb/70571/close-button.png"
+                      }}
+                      style={{
+                        height: hp("5%"),
+                        width: wp("5%"),
+                        alignSelf: "center"
+                      }}
+                    />
                   </TouchableOpacity>
                 </View>
 
-                <View style={{alignSelf: "center", width: wp('70%'), height: hp('50%'), paddingTop: hp('10%'), paddingLeft: wp('10%')}}>
-                  <Button title="Ratings" style={{height: hp('40%'), width: wp('100%'), textAlign: "center"}} />
-                  <Button title="Limited" style={{height: hp('40%'), width: wp('100%'), textAlign: "center"}} />
-                  <Button title="Unlimited" style={{height: hp('40%'), width: wp('100%'), textAlign: "center"}} />
-                  <Button title="Nearest" style={{height: hp('40%'), width: wp('100%'), textAlign: "center"}} />
-                </View> 
-
+                <View
+                  style={{
+                    alignSelf: "center",
+                    width: wp("70%"),
+                    height: hp("50%"),
+                    paddingTop: hp("10%"),
+                    paddingLeft: wp("10%")
+                  }}
+                >
+                  <Button
+                    title="Ratings"
+                    style={{
+                      height: hp("40%"),
+                      width: wp("100%"),
+                      textAlign: "center"
+                    }}
+                  />
+                  <Button
+                    title="Limited"
+                    style={{
+                      height: hp("40%"),
+                      width: wp("100%"),
+                      textAlign: "center"
+                    }}
+                  />
+                  <Button
+                    title="Unlimited"
+                    style={{
+                      height: hp("40%"),
+                      width: wp("100%"),
+                      textAlign: "center"
+                    }}
+                  />
+                  <Button
+                    title="Nearest"
+                    style={{
+                      height: hp("40%"),
+                      width: wp("100%"),
+                      textAlign: "center"
+                    }}
+                  />
+                </View>
               </View>
             </Modal>
-            
           </View>
         </View>
 
@@ -253,9 +316,9 @@ const styles = StyleSheet.create({
     flex: 5,
     flexDirection: "column"
   },
-  modal:{
-    height: hp('40%'),
-    width: wp('100%'),
+  modal: {
+    height: hp("40%"),
+    width: wp("100%"),
     justifyContent: "center",
     alignSelf: "center"
   },
