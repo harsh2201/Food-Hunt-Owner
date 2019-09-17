@@ -44,7 +44,7 @@ export default class EventList extends React.Component {
     var data;
     firebase
       .database()
-      .ref("Dummy/")
+      .ref("Owner/")
       .on(
         "value",
         async function(snapshot) {
@@ -55,8 +55,7 @@ export default class EventList extends React.Component {
             {
               name: "",
               uid: "",
-              date: "",
-              rating: ""
+              mid: ""
             }
           ];
 
@@ -72,12 +71,11 @@ export default class EventList extends React.Component {
               //console.log(element);
 
               te.push({
-                name: data[key].Credentials.Name,
-                uid: data[key].Credentials.UID,
-                date: "22/02/22",
-                rating: rat
+                name: data[key].Name,
+                uid: data[key].limited,
+                mid: data[key].Credentials.mid
               });
-              rat = rat + 1;
+              // rat = rat + 1;
             }
           }
 
