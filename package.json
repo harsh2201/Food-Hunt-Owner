@@ -33,6 +33,7 @@
     "react-native-remote-svg": "^2.0.6",
     "react-native-responsive-fontsize": "^0.2.1",
     "react-native-responsive-screen": "^1.2.2",
+    "react-native-snap-carousel": "^3.8.0",
     "react-native-sparkbutton": "^0.2.0",
     "react-native-web": "^0.11.4",
     "react-native-webview": "^5.12.1",

@@ -5,18 +5,16 @@ import {
   View,
   TouchableOpacity,
   Image,
-  ScrollView,
-  TouchableHighlight
+  ScrollView
 } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import Carousel from "react-native-anchor-carousel";
 import { SearchBar } from "react-native-elements";
 import { Container, Card, Picker } from "native-base";
 import * as firebase from "firebase";
-//import {Icon} from 'react-native-vector-icons ';
+import Carousel, { ParallaxImage } from "react-native-snap-carousel";
 
 export default class HomeScreen extends React.Component {
   state = {
@@ -62,37 +60,6 @@ export default class HomeScreen extends React.Component {
       );
   }
 
-  user = [
-    {
-      name: "Gujarati Food",
-      time: "11:00 AM",
-      EndTime: "1:00 PM",
-      Quantity: "Limited",
-      images: "https://bit.ly/CZHarshAvatar"
-    },
-    {
-      name: "Mexican Food",
-      time: "11:00 AM",
-      EndTime: "1:00 PM",
-      Quantity: "Limited",
-      images: "https://bit.ly/CZShivamAvatar"
-    },
-    {
-      name: "Punjabi Food",
-      time: "11:00 AM",
-      EndTime: "1:00 PM",
-      Quantity: "Limited",
-      images: "https://bit.ly/CZHarshAvatar"
-    },
-    {
-      name: "Punjabi Food",
-      time: "11:00 AM",
-      EndTime: "1:00 PM",
-      Quantity: "Limited",
-      images: "https://bit.ly/CZShivamAvatar"
-    }
-  ];
-
   data = [
     {
       label: "Filter",
@@ -119,12 +86,6 @@ export default class HomeScreen extends React.Component {
     const { search } = this.state;
     return (
       <View style={styles.container}>
-        {/* header */}
-        {/* <View>
-          <Text style={styles.header}>FoodHunt</Text>
-        </View> */}
-
-        {/* scroll view of messes */}
         <View style={styles.card}>
           <Container>
             <View>
