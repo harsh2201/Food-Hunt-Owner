@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import React from "react";
 import * as firebase from "firebase";
+const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 export default class profile extends React.Component {
   constructor() {
     super();
@@ -36,7 +37,7 @@ export default class profile extends React.Component {
       <View style={styles.container}>
         <View style={styles.header}></View>
         <Image
-          style={styles.avatar}
+          style={styles.image}
           source={{
             uri:
               "https://cache.desktopnexus.com/thumbseg/977/977172-bigthumbnail.jpg"
@@ -79,11 +80,11 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: "#F75728",
-    height: 200,
+    height: (screenHeight * 4) / 10,
     borderBottomRightRadius: 25,
     borderBottomLeftRadius: 25
   },
-  avatar: {
+  image: {
     width: 130,
     height: 130,
     borderRadius: 63,
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignSelf: "center",
     position: "absolute",
-    marginTop: 130
+    marginTop: (screenHeight * 4) / 10 - 65
   },
   name: {
     fontSize: 22,
@@ -100,7 +101,8 @@ const styles = StyleSheet.create({
     fontWeight: "600"
   },
   body: {
-    marginTop: 40
+    marginTop: 40,
+    height: (screenHeight * 6) / 10
   },
   bodyContent: {
     flex: 1,
@@ -124,12 +126,13 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   buttonContainer: {
-    marginTop: 150,
+    //marginTop: 150,
     height: 30,
-    flexDirection: "row",
+    //flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 20,
+    position: "absolute",
+    marginTop: (screenHeight * 3) / 10,
     width: 100,
     borderRadius: 50,
     backgroundColor: "#F75728"
