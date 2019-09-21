@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, Easing, Animated } from "react-native";
-import {
-  createAppContainer,
-  createSwitchNavigator,
-  createStackNavigator
-} from "react-navigation";
+import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
 import Navigator from "./Navigation/Navigator";
 import Login from "./Screens/Login";
 // import {  } from "expo";
