@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import Text from "../data/customText";
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
-import HomeScreen from "../Screens/HomeScreen";
+import HomeScreen from "../Screens/HomeScreen2";
 import MessDetail from "../Screens/MessDetail";
 import { Transition } from "react-native-reanimated";
 
@@ -32,16 +32,6 @@ const AppSwitchNavigator = createStackNavigator(
     defaultNavigationOptions: {
       gesturesEnabled: true
     }
-    // transition: (
-    //   <Transition.Together>
-    //     <Transition.Out
-    //       type="slide-bottom"
-    //       durationMs={400}
-    //       interpolation="easeIn"
-    //     />
-    //     <Transition.In type="fade" durationMs={500} />
-    //   </Transition.Together>
-    // )
   }
 );
 

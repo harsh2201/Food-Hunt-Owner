@@ -3,6 +3,7 @@ import { View, StyleSheet, StatusBar, SafeAreaView } from "react-native";
 import FoodHunt from "./FoodHunt";
 import * as Font from "expo-font";
 import * as firebase from "firebase";
+import HomeScreen from "./Screens/HomeScreen2";
 
 import firebaseConfig from "./data/config";
 if (!firebase.apps.length) {
@@ -28,14 +29,13 @@ class App extends Component {
   }
   render() {
     return (
-      <View style={styles.container}>
+      <View style={{ flex: 1 }}>
         {this.state.isLoading ? (
           <View />
         ) : (
           <View style={styles.container}>
-            {/* <SafeAreaView> */}
-            <FoodHunt />
-            {/* </SafeAreaView> */}
+            {/* <FoodHunt /> */}
+            <HomeScreen />
           </View>
         )}
       </View>
@@ -46,7 +46,7 @@ export default App;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
-    // paddingTop: StatusBar.currentHeight / 2
+    flex: 1,
+    paddingTop: StatusBar.currentHeight
   }
 });

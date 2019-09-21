@@ -57,7 +57,7 @@ export default class Navigator extends React.Component {
                     justifyContent: "center",
                     alignItems: "center",
                     textAlign: "center",
-                    fontSize: 30
+                    fontSize: 25
                   }}
                 >
                   Favourites
@@ -73,7 +73,7 @@ export default class Navigator extends React.Component {
                     justifyContent: "center",
                     alignItems: "center",
                     textAlign: "center",
-                    fontSize: 30
+                    fontSize: 25
                   }}
                 >
                   Profile
