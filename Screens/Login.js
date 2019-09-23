@@ -16,7 +16,7 @@ export default class Login extends Component {
         >
           <View style={{ flex: 1, alignItems: "center" }}>
             <View style={styles.container}>
-              <Text style={styles.text}>FoodHunt</Text>
+              <Text style={styles.text}>FoodHunt </Text>
             </View>
             <View style={styles.button}>
               <TouchableOpacity

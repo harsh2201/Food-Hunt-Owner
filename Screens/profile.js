@@ -65,7 +65,7 @@ export default class profile extends React.Component {
                 })
               }
               style={styles.buttonContainer}
-              text="Sign Out"
+              text="Sign Out "
               textStyle={{ fontSize: 20 }}
               gradientBegin="#FFD801"
               gradientEnd="#F87217"
@@ -143,12 +143,13 @@ const styles = StyleSheet.create({
   buttonContainer: {
     //marginTop: 150,
     height: 40,
-    //flexDirection: "row",
+    color: "#FFFFFF",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
     marginTop: (screenHeight * 3) / 10,
-    marginLeft: (screenWidth * 1) / 10,
+    marginLeft: (screenWidth * 4) / 10,
     width: 100
   }
 });
