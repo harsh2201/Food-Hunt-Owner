@@ -32,63 +32,68 @@ export default class EventList extends React.Component {
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    firebase
-      .database()
-      .ref("Dummy/")
-      .push({
-        Credentials: {
-          Name: "karan"
-        }
-      });
-
+    var db = firebase.database();
     var data;
-    firebase
-      .database()
-      .ref("Owner/")
-      .on(
-        "value",
-        async function(snapshot) {
-          let snap = JSON.stringify(snapshot);
-          data = JSON.parse(snap);
+    var temp = [];
 
-          var te = [
-            {
-              name: "",
-              uid: "",
-              mid: ""
-            }
-          ];
-
-          console.log(te);
-          var temp = [];
-
-          var rat = 1;
-          //var j = 0, i = 0;
-          for (const key in data) {
-            var child = [];
-            if (data.hasOwnProperty(key)) {
-              const element = data[key];
-              //console.log(element);
-
-              te.push({
-                name: data[key].Name,
-                uid: data[key].limited,
-                mid: data[key].Credentials.mid
-              });
-              // rat = rat + 1;
-            }
+    db.ref("Owner/").on(
+      "value",
+      async function(snapshot) {
+        let snap = JSON.stringify(snapshot);
+        data = JSON.parse(snap);
+        var rat = 1;
+        var te = [
+          {
+            name: "",
+            limited: "",
+            mid: "",
+            unlimited: "",
+            rating: ""
           }
+        ];
 
-          // Object.keys(data).map(key=>(
-          //   //console.log(key)
-          //   t.push(key)
-          // ))
-          this.setState({
-            data: te
-          });
-          console.log(this.state.data);
-        }.bind(this)
-      );
+        for (const key in data) {
+          var child = [];
+          if (data.hasOwnProperty(key)) {
+            const element = data[key];
+            var rating = 0;
+            //console.log(element);
+            db.ref("Rating/" + data[key].Credentials.mid).on(
+              "value",
+              async function(snapshot) {
+                let snap = JSON.stringify(snapshot);
+                rating_data = JSON.parse(snap);
+                console.log(rating_data.total);
+                var count = 0;
+                for (const key in rating_data.user) {
+                  if (rating_data.user.hasOwnProperty(key)) {
+                    const element = rating_data.user[key];
+                    count = count + 1;
+                  }
+                }
+                console.log(count);
+                rating = rating_data.total / count;
+                console.log(rating);
+                // console.log(data[key].name);
+                te.push({
+                  name: data[key].name,
+                  limited: data[key].limited.toString(),
+                  unlimited: data[key].unlimited.toString(),
+                  rating: rating,
+                  mid: data[key].Credentials.mid
+                });
+              }.bind(this)
+            );
+          }
+        }
+
+        this.setState({
+          data: te
+        });
+        console.log(this.state.data);
+        //console.log("Main:" + this.state.data);
+      }.bind(this)
+    );
   }
   searchFilterFunction = text => {
     var temp = this.state.data;
@@ -101,10 +106,34 @@ export default class EventList extends React.Component {
     );
     console.log(result);
   };
+  Filter_limited = () => {
+    var temp = this.state.data;
+
+    const result = temp.filter(word => word.limited.match("true"));
+    console.log("Limited");
+    console.log(result);
+  };
+  Filter_Unlimited = () => {
+    var temp = this.state.data;
+    //var t = true;
+    const result = temp.filter(word => word.unlimited.match("true"));
+    console.log("UNLimited");
+    console.log(result);
+  };
+  Rating = () => {
+    var temp = this.state.data;
+    function Comparator(a, b) {
+      if (a.rating < b.rating) return -1;
+      if (a.rating > b.rating) return 1;
+      return 0;
+    }
+    temp = temp.sort(Comparator);
+    console.log(temp);
+  };
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={{ flex: 1, backgroundColor: "white", padding: 10 }}>
         <Text>Hellooo.......Vidhya!</Text>
         <SearchBar
           placeholder="Type Here..."
@@ -113,6 +142,9 @@ export default class EventList extends React.Component {
           autoCorrect={false}
           value={this.state.search}
         />
+        <Button onPress={this.Filter_limited} title="limited"></Button>
+        <Button onPress={this.Filter_Unlimited} title="Unlimited"></Button>
+        <Button onPress={this.Rating} title="Rating"></Button>
       </View>
     );
   }
