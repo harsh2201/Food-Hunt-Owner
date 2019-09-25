@@ -10,7 +10,7 @@ import {
 import React from "react";
 import * as firebase from "firebase";
 import { LinearGradient } from "expo-linear-gradient";
-import GradientButton from "react-native-gradient-buttons";
+// import GradientButton from "react-native-gradient-buttons";
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 export default class profile extends React.Component {
   constructor() {
@@ -58,7 +58,7 @@ export default class profile extends React.Component {
         <View style={styles.body}>
           <View style={styles.bodyContent}>
             <Text style={styles.name}>Vidhya Kothadia</Text>
-            <GradientButton
+            {/* <GradientButton
               onPressAction={
                 (this.SignOut = () => {
                   alert("Sign Out");
@@ -76,7 +76,7 @@ export default class profile extends React.Component {
               impact
               impactStyle="Light"
               //onPress={this.SignOut}
-            />
+            /> */}
           </View>
         </View>
       </View>
