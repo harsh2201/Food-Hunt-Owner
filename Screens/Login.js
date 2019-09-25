@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Dimensions,
   Animated,
-  Easing
+  Easing,
+  StatusBar
 } from "react-native";
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
 import * as Facebook from "expo-facebook";
@@ -89,7 +90,7 @@ export default class Login extends Component {
         if (user) {
           var database = firebase.database();
           // console.log(user);
-          database.ref("Users/" + user.uid + "/").set({
+          database.ref("Users/" + user.uid + "/").update({
             name: user.displayName,
             photoURL: user.photoURL,
             uid: user.uid,
@@ -134,7 +135,7 @@ export default class Login extends Component {
           var database = firebase.database();
           // console.log(user);
           // console.log(firebase.auth().currentUser);
-          database.ref("Users/" + user.uid + "/").set({
+          database.ref("Users/" + user.uid + "/").update({
             name: user.displayName,
             photoURL: user.photoURL,
             uid: user.uid,
@@ -155,19 +156,16 @@ export default class Login extends Component {
     return (
       <View style={{ flex: 1 }}>
         <ImageBackground
-          style={{ flex: 1 }}
+          style={{ flex: 1, justifyContent: "space-around" }}
           source={require("../assets/loginBack.png")}
         >
-          {/* <View style={{ height: screenHeight / 3 }}>
-            <LottieView
-              style={styles.loader}
-              source={require("../assets/Lottie/login.json")}
-              // progress={this.state.progress}
-              autoPlay={true}
-              speed={5}
-            />
-          </View> */}
-          <View style={{ flex: 1, alignItems: "center" }}>
+          <View
+            style={{
+              height: (1.5 * screenHeight) / 7,
+              // backgroundColor: "red",
+              marginTop: StatusBar.currentHeight
+            }}
+          >
             <View style={styles.container}>
               <View style={styles.logoContainer}>
                 <Image
@@ -176,25 +174,57 @@ export default class Login extends Component {
                 />
               </View>
             </View>
-            <View style={styles.button}>
-              <TouchableOpacity
-                style={styles.buttonText}
-                onPress={this._fbLogin}
-              >
-                <Image
-                  style={styles.image}
-                  source={require("../assets/facebook.png")}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.buttonText}
-                onPress={this._googleLogin}
-              >
-                <Image
-                  style={styles.image}
-                  source={require("../assets/google.png")}
-                />
-              </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              height: (3 * screenHeight) / 7
+              // backgroundColor: "yellow"
+            }}
+          >
+            <LottieView
+              style={{ flex: 1 }}
+              source={require("../assets/Lottie/office.json")}
+              // progress={this.state.progress}
+              autoPlay={true}
+              loop={true}
+            />
+          </View>
+          <View
+            style={{
+              height: screenHeight / 7,
+              width: screenWidth - 50,
+              // backgroundColor: "black",
+              alignSelf: "center"
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                // backgroundColor: "black",
+                justifyContent: "flex-end"
+                // marginBottom: 40
+              }}
+            >
+              <View style={styles.button}>
+                <TouchableOpacity
+                  style={styles.buttonText}
+                  onPress={this._fbLogin}
+                >
+                  <Image
+                    style={styles.image}
+                    source={require("../assets/facebook.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonText}
+                  onPress={this._googleLogin}
+                >
+                  <Image
+                    style={styles.image}
+                    source={require("../assets/google.png")}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </ImageBackground>
@@ -228,9 +258,10 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
-    justifyContent: "center",
+    // justifyContent: "center",
+    // alignSelf: "center",
+    // marginTop: screenHeight / 2.6,
     alignSelf: "center",
-    marginTop: screenHeight / 2.6,
     backgroundColor: "#ffffffef",
     borderRadius: 10,
     width: screenWidth - 50,
@@ -248,7 +279,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     height: screenHeight / 6,
     width: screenWidth - 50,
-    justifyContent: "center",
+    // justifyContent: "center",
     alignSelf: "center"
   },
   logo: {
@@ -269,7 +300,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: "white",
-    marginTop: screenHeight / 4.8,
+    // marginTop: screenHeight / 4.8,
     height: screenHeight / 7,
     width: screenWidth - 50,
     borderRadius: 10,
@@ -306,8 +337,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderColor: "rgba(0, 0, 0, 0.1)"
-  },
-  loader: {
-    flex: 1
   }
 });

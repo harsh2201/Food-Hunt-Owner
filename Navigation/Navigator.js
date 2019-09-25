@@ -5,7 +5,7 @@ import Text from "../data/customText";
 import MessNavigation from "../Navigation/MessNavigation";
 import Developers from "../Screens/Developers";
 import Favourites from "../Screens/Favourites";
-import Profile from "../Screens/profile";
+import Profile from "../Screens/Profile";
 // import SparkButton from "react-native-sparkbutton";
 
 export default class Navigator extends React.Component {

@@ -4,14 +4,14 @@ import {
   ImageBackground,
   StyleSheet,
   Text,
-  Image,
-  TouchableOpacity
+  Image
 } from "react-native";
 import React from "react";
 import * as firebase from "firebase";
-import { LinearGradient } from "expo-linear-gradient";
-// import GradientButton from "react-native-gradient-buttons";
+import LottieView from "lottie-react-native";
+import { Button } from "react-native-paper";
 const { height: screenHeight, width: screenWidth } = Dimensions.get("window");
+
 export default class profile extends React.Component {
   constructor() {
     super();
@@ -19,19 +19,8 @@ export default class profile extends React.Component {
   }
 
   componentDidMount() {
-    var firebaseConfig = {
-      apiKey: "AIzaSyAOKUYgOO6Kedxa0hrS7VzWHaG7n8CXyv8",
-      authDomain: "firstdemo-c6659.firebaseapp.com",
-      databaseURL: "https://firstdemo-c6659.firebaseio.com",
-      projectId: "firstdemo-c6659",
-      storageBucket: "",
-      messagingSenderId: "1008789145023",
-      appId: "1:1008789145023:web:1c2de7959e8efea6"
-    };
-    firebase.initializeApp(firebaseConfig);
-
-    var user = firebase.auth().currentUser;
-    console.log(user);
+    // user = firebase.auth().currentUser;
+    // console.log(user);
   }
   SignOut = () => {
     // alert("Sign Out");
@@ -41,44 +30,40 @@ export default class profile extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View>
-          <Image
-            style={styles.header}
-            source={require("../assets/loginBack.png")}
-          />
+        <View style={styles.header}>
+          <ImageBackground
+            style={{ flex: 1, backgroundColor: "#cfd8dc" }}
+            // source={require("../assets/loginBack.png")}
+          >
+            <LottieView
+              style={{ flex: 1 }}
+              source={require("../assets/Lottie/ninja.json")}
+              autoPlay={true}
+              loop={true}
+            />
+          </ImageBackground>
         </View>
-
+        <View style={styles.body}>
+          <View style={styles.bodyContent}>
+            <Text style={styles.name}>
+              {firebase.auth().currentUser.displayName}
+            </Text>
+            <Button
+              // icon="camera"
+              color={"red"}
+              mode="outlined"
+              onPress={() => firebase.auth().signOut()}
+            >
+              Log Out
+            </Button>
+          </View>
+        </View>
         <Image
           style={styles.image}
           source={{
-            uri:
-              "https://cache.desktopnexus.com/thumbseg/977/977172-bigthumbnail.jpg"
+            uri: firebase.auth().currentUser.photoURL
           }}
         />
-        <View style={styles.body}>
-          <View style={styles.bodyContent}>
-            <Text style={styles.name}>Vidhya Kothadia</Text>
-            {/* <GradientButton
-              onPressAction={
-                (this.SignOut = () => {
-                  alert("Sign Out");
-                })
-              }
-              style={styles.buttonContainer}
-              text="Sign Out "
-              textStyle={{ fontSize: 20 }}
-              gradientBegin="#FFD801"
-              gradientEnd="#F87217"
-              gradientDirection="horizontal"
-              width={100}
-              height={40}
-              radius={15}
-              impact
-              impactStyle="Light"
-              //onPress={this.SignOut}
-            /> */}
-          </View>
-        </View>
       </View>
     );
   }
@@ -104,25 +89,42 @@ const styles = StyleSheet.create({
     height: 130,
     borderRadius: 63,
     borderWidth: 4,
-    //borderColor: "white",
+    borderColor: "#5f5f5f",
     marginBottom: 10,
     position: "absolute",
-    marginTop: (screenHeight * 4) / 10 - 65,
-    marginLeft: (screenWidth * 1) / 10
+    marginTop: (screenHeight * 4) / 10 - 85,
+    marginLeft: (screenWidth * 1) / 10,
+    zIndex: 1000
   },
   name: {
     fontSize: 22,
     color: "#FFFFFF",
     fontWeight: "600",
     position: "absolute",
-    marginLeft: (screenWidth * 1) / 10 - 65
+    marginLeft: screenWidth / 10 - 65
   },
   body: {
-    marginTop: 40,
-    height: (screenHeight * 6) / 10
+    height: (screenHeight * 6) / 10,
+    backgroundColor: "white",
+    marginTop: -20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5
+    },
+    shadowOpacity: 0.36,
+    shadowRadius: 6.68,
+
+    // elevation: 11,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30
   },
   bodyContent: {
-    padding: 30
+    paddingVertical: 30,
+    marginTop: 40,
+    // backgroundColor: "black",
+    flexDirection: "row",
+    justifyContent: "space-around"
   },
   name: {
     fontSize: 28,

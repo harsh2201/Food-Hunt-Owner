@@ -59,7 +59,7 @@ export default class ScrollSwagger extends Component {
 
   _storeData = async (key, value) => {
     // try {
-    await AsyncStorage.setItem(key, value);
+    // await AsyncStorage.setItem(key, value);
     // } catch (error) {
     // Error saving data
     // }

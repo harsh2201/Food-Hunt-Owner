@@ -130,6 +130,7 @@ class Card extends Component {
               </Text>
             </View>
             <TouchableOpacity
+              key={this.messData.name}
               style={{
                 flex: 3,
                 // backgroundColor: "#fff",
