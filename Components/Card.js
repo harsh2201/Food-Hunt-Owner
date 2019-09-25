@@ -10,12 +10,14 @@ import {
 
 import Text from "../data/customText";
 import LottieView from "lottie-react-native";
+import { RFValue } from "react-native-responsive-fontsize";
+import * as firebase from "firebase";
 
 const { height, width } = Dimensions.get("window");
 const CARDHEIGHT = height / 3;
 
 class Card extends Component {
-  liked = this.props.liked;
+  liked = this.props.messData.fav;
   messData = this.props.messData;
 
   constructor(props) {
@@ -25,7 +27,8 @@ class Card extends Component {
     };
   }
 
-  onPressHeart = row => {
+  onPressHeart = async row => {
+    let uid = firebase.auth().currentUser.uid;
     if (row) {
       Animated.timing(this.state.heartProgress, {
         toValue: 0,
@@ -33,6 +36,10 @@ class Card extends Component {
         easing: Easing.linear
       }).start();
       this.liked = false;
+      firebase
+        .database()
+        .ref("Users/" + uid + "/fav/")
+        .update({ [this.messData.mid]: false });
     } else {
       Animated.timing(this.state.heartProgress, {
         toValue: 1,
@@ -40,6 +47,10 @@ class Card extends Component {
         easing: Easing.quad
       }).start();
       this.liked = true;
+      firebase
+        .database()
+        .ref("Users/" + uid + "/fav/")
+        .update({ [this.messData.mid]: true });
     }
   };
 
@@ -111,8 +122,12 @@ class Card extends Component {
                 justifyContent: "center"
               }}
             >
-              <Text style={{ fontSize: 22 }}>{this.messData.name}</Text>
-              <Text style={{ fontSize: 15 }}>{this.messData.time}</Text>
+              <Text style={{ fontSize: RFValue(19) }}>
+                {this.messData.name}
+              </Text>
+              <Text style={{ fontSize: RFValue(15) }}>
+                {this.messData.time}
+              </Text>
             </View>
             <TouchableOpacity
               style={{
@@ -126,6 +141,7 @@ class Card extends Component {
               }}
             >
               <LottieView
+                key={this.messData.name}
                 style={{
                   height: "80%",
                   width: "80%",

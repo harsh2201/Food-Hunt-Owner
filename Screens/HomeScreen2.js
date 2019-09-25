@@ -2,14 +2,16 @@ import React, { Component } from "react";
 import {
   Animated,
   View,
-  ListView,
   Dimensions,
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
-  Image
+  Image,
+  StatusBar,
+  AsyncStorage
 } from "react-native";
 import Carousel, { ParallaxImage } from "react-native-snap-carousel";
+import { RFValue } from "react-native-responsive-fontsize";
 import { Searchbar } from "react-native-paper";
 
 import Card from "../Components/Card";
@@ -20,36 +22,28 @@ import Modal from "react-native-modal";
 
 const { height, width } = Dimensions.get("window");
 
-const SLIDERHEIGHT = (3 * height) / 10;
+const SLIDERHEIGHT = (3 * height) / 9;
 const SEARCHBARHEIGHT = height / 15 + 5;
 
-const item = [];
-const ds = new ListView.DataSource({
-  rowHasChanged: (r1, r2) => {
-    if (r1.name !== r2.name) {
-      return true;
-    }
-  }
-});
+// const ds = new ListView.DataSource({
+//   rowHasChanged: (r1, r2) => {
+//     if (r1.name !== r2.name) {
+//       return true;
+//     }
+//   }
+// });
 export default class ScrollSwagger extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       entries: [],
-      messData: ds.cloneWithRows([]),
-      isModalVisible: true,
+      data: [],
+      messData: [],
+      isModalVisible: false,
       searchQuery: "",
       scrollY: new Animated.Value(0),
-      dataSource: ds.cloneWithRows([
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        true
-      ])
+      searchResult: []
     };
   }
 
@@ -63,8 +57,46 @@ export default class ScrollSwagger extends Component {
     });
   };
 
-  componentDidMount() {
-    firebase
+  _storeData = async (key, value) => {
+    // try {
+    await AsyncStorage.setItem(key, value);
+    // } catch (error) {
+    // Error saving data
+    // }
+  };
+
+  async componentDidMount() {
+    // const res = await fetch(
+    //   "https://miro.medium.com/max/5040/0*gQj7ECqJQeTqbW1M.png"
+    // );
+    // const blob = await res.blob();
+    // await firebase
+    //   .storage()
+    //   .ref()
+    //   .child("GJ/name")
+    //   .put(blob);
+    // URL = await firebase
+    //   .storage()
+    //   .ref()
+    //   .child("GJ/name")
+    //   .getDownloadURL();
+    // console.log("Done");
+    // this.setState({ URL: URL });
+    this.setState({ isModalVisible: true });
+    let fav = [];
+    await firebase
+      .database()
+      .ref("Users/" + firebase.auth().currentUser.uid + "/fav/")
+      .on("value", snapshot2 => {
+        let snap2 = JSON.stringify(snapshot2);
+        let data2 = JSON.parse(snap2);
+        for (key in data2) {
+          if (data2[key] === true) {
+            fav.push(key);
+          }
+        }
+      });
+    await firebase
       .database()
       .ref("Owner/")
       .on(
@@ -72,9 +104,7 @@ export default class ScrollSwagger extends Component {
         async function(snapshot) {
           let snap = JSON.stringify(snapshot);
           data = JSON.parse(snap);
-          var te = [];
-          // console.log(te);
-          var rat = 1;
+          let te = [];
           for (const key in data) {
             const element = data[key];
             // console.log(element);
@@ -89,14 +119,22 @@ export default class ScrollSwagger extends Component {
               limited: element.limited,
               address: element.address,
               avgCost: element.avgCost,
-              views: element.views
+              views: element.views,
+              fav: fav.includes(element.Credentials.mid) ? true : false
             });
           }
+          // console.log(te);
           let topViews = this.calcViews(te).slice(0, 5);
-          console.log(topViews);
-          let data = ds.cloneWithRows(te);
+          // console.log(topViews);
+          // this.setState({
+          //   messData: ds.cloneWithRows([])
+          // });
+          // let data = ds.cloneWithRows(te);
+          // this._storeData("messData", te);
+          await AsyncStorage.setItem("messData", JSON.stringify(te));
           this.setState({
-            messData: data,
+            data: te,
+            messData: te,
             topViews: topViews,
             isModalVisible: false
           });
@@ -105,15 +143,46 @@ export default class ScrollSwagger extends Component {
       );
   }
 
-  searchAction = () => {};
+  // componentWillUnmount() {
+  //   this.setState({
+  //     isModalVisible: false
+  //   });
+  // }
+
+  searchAction = query => {
+    let searchResult = this.state.data.filter(item => {
+      return item.name.includes(query);
+    });
+    // console.log(searchResult);
+    // this.setState({
+    //   messData: ds.cloneWithRows([])
+    // });
+    this.setState({
+      messData: searchResult
+    });
+    // console.log(this.state.messData.getRowData);
+    // this.setState({
+    // });
+  };
 
   toggleModal = () => {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   };
 
-  renderRow(rowData) {
-    return <Card liked={false} messData={rowData} />;
-  }
+  // renderRow = () => {
+  //   this.state.messData.map((rowData, key) => {
+  //     console.log("rowData", rowData);
+  //     return (
+  //       <TouchableOpacity
+  //         onPress={() => {
+  //           this.props.navigation.navigate("MessDetail", { mess: rowData });
+  //         }}
+  //       >
+  //         <Card liked={false} messData={rowData} />
+  //       </TouchableOpacity>
+  //     );
+  //   });
+  // };
 
   _renderItem({ item, index }, parallaxProps) {
     return (
@@ -128,13 +197,16 @@ export default class ScrollSwagger extends Component {
         <View
           style={{
             width: width - 30,
-            height: width - 60,
+            height: SLIDERHEIGHT,
             backgroundColor: "#00000050",
             position: "absolute",
             justifyContent: "center"
+            // alignItems: "center"
           }}
         >
-          <Text style={{ fontSize: 35, color: "#fff", paddingLeft: 10 }}>
+          <Text
+            style={{ fontSize: RFValue(28), color: "#fff", paddingLeft: 10 }}
+          >
             {item.name}
           </Text>
           <View style={{ flexDirection: "row", paddingLeft: 10 }}>
@@ -145,7 +217,13 @@ export default class ScrollSwagger extends Component {
               source={require("../assets/Lottie/eye.json")}
               autoPlay={true}
             />
-            <Text style={{ fontSize: 20, color: "#fff", alignSelf: "center" }}>
+            <Text
+              style={{
+                fontSize: RFValue(13),
+                color: "#fff",
+                alignSelf: "center"
+              }}
+            >
               {item.views}
             </Text>
           </View>
@@ -161,7 +239,11 @@ export default class ScrollSwagger extends Component {
     });
     var searchMov = this.state.scrollY.interpolate({
       inputRange: [0, 180, 181],
-      outputRange: [SLIDERHEIGHT + 15, 10, 10]
+      outputRange: [
+        SLIDERHEIGHT + 15,
+        StatusBar.currentHeight,
+        StatusBar.currentHeight
+      ]
     });
     var searchCorner = this.state.scrollY.interpolate({
       inputRange: [0, 180, 181],
@@ -187,18 +269,20 @@ export default class ScrollSwagger extends Component {
       <View style={{ flex: 1 }}>
         <ImageBackground
           style={{ flex: 1 }}
-          source={require("../assets/loginBack.png")}
+          source={require("../assets/back1.png")}
         >
           {/* List Items */}
           {this.state.isModalVisible ? (
             <View />
           ) : (
             <View style={{}}>
-              <ListView
+              {/* <ListView
+                key={"dcdcd"}
                 dataSource={this.state.messData}
                 renderRow={this.renderRow.bind(this)}
                 renderScrollComponent={this.renderScroll.bind(this)}
-              />
+              /> */}
+              {this.renderScroll()}
             </View>
           )}
           {/* Top Image Slider */}
@@ -210,6 +294,7 @@ export default class ScrollSwagger extends Component {
               top: 0,
               zIndex: 0,
               opacity: imgOp,
+              paddingTop: StatusBar.currentHeight,
               // backgroundColor: headColor,
               justifyContent: "flex-end",
               flexDirection: "column",
@@ -258,6 +343,7 @@ export default class ScrollSwagger extends Component {
                 placeholder="Search"
                 onChangeText={query => {
                   this.setState({ searchQuery: query });
+                  this.searchAction(query);
                 }}
                 value={this.state.searchQuery}
               />
@@ -286,27 +372,31 @@ export default class ScrollSwagger extends Component {
               </View>
             </Animated.View>
           </Animated.View>
-          <Modal
-            isVisible={this.state.isModalVisible}
-            backdropColor="#000"
-            backdropOpacity={0.8}
-            animationIn="zoomInDown"
-            animationOut="zoomOutUp"
-            animationInTiming={600}
-            animationOutTiming={600}
-            backdropTransitionInTiming={800}
-            backdropTransitionOutTiming={800}
-            style={styles.modal}
-          >
-            <View style={styles.modalContent}>
-              <LottieView
-                style={styles.loader}
-                source={require("../assets/Lottie/cooking.json")}
-                autoPlay={true}
-                loop={true}
-              />
-            </View>
-          </Modal>
+          {this.state.isModalVisible ? (
+            <Modal
+              isVisible={this.state.isModalVisible}
+              backdropColor="#000"
+              backdropOpacity={0.8}
+              animationIn="zoomInDown"
+              animationOut="zoomOutUp"
+              animationInTiming={600}
+              animationOutTiming={600}
+              backdropTransitionInTiming={800}
+              backdropTransitionOutTiming={800}
+              style={styles.modal}
+            >
+              <View style={styles.modalContent}>
+                <LottieView
+                  style={styles.loader}
+                  source={require("../assets/Lottie/cooking.json")}
+                  autoPlay={true}
+                  loop={true}
+                />
+              </View>
+            </Modal>
+          ) : (
+            <View />
+          )}
         </ImageBackground>
       </View>
     );
@@ -315,15 +405,16 @@ export default class ScrollSwagger extends Component {
     // console.log(e.nativeEvent.contentOffset.y, "jvjhvhm");
   }
 
-  renderScroll(props) {
+  renderScroll() {
     return (
       <Animated.ScrollView
-        {...props}
+        // {...props}
         scrollEventThrottle={16}
         contentContainerStyle={{
           paddingTop: SLIDERHEIGHT + SEARCHBARHEIGHT + height / 20,
           borderTopRightRadius: 50,
           borderTopLeftRadius: 20
+          // height: 1000
           // backgroundColor: "red"
         }}
         // Declarative API for animations ->
@@ -340,7 +431,23 @@ export default class ScrollSwagger extends Component {
             useNativeDriver: true
           }
         )}
-      />
+      >
+        {this.state.messData.map((rowData, key) => {
+          {
+            /* console.log("rowData", rowData); */
+          }
+          return (
+            <TouchableOpacity
+              key={rowData.name}
+              onPress={() => {
+                this.props.navigation.navigate("MessDetail", { mess: rowData });
+              }}
+            >
+              <Card liked={false} messData={rowData} key={rowData.name} />
+            </TouchableOpacity>
+          );
+        })}
+      </Animated.ScrollView>
     );
   }
 }
@@ -348,7 +455,7 @@ export default class ScrollSwagger extends Component {
 const styles = StyleSheet.create({
   item: {
     width: width - 30,
-    height: width - 60,
+    height: SLIDERHEIGHT,
     marginTop: 20,
     borderRadius: 8,
     shadowColor: "#000",

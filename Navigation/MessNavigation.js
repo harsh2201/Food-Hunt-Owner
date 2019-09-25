@@ -5,23 +5,15 @@ import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 import HomeScreen from "../Screens/HomeScreen2";
 import MessDetail from "../Screens/MessDetail";
-import { Transition } from "react-native-reanimated";
+import Favourites from "../Screens/Favourites";
 
-// class MessNavigation extends Component {
-//   render() {
-//     const { navigation } = this.props;
-//     let data = navigation.getParam("mess");
-//     console.log(data);
+export default class MessNavigation extends Component {
+  render() {
+    return this.props.isHome ? <AppNavigatorH /> : <AppNavigatorF />;
+  }
+}
 
-//     return (
-//       <View style={styles.container}>
-//         <Text>{}</Text>
-//       </View>
-//     );
-//   }
-// }
-
-const AppSwitchNavigator = createStackNavigator(
+const AppSwitchNavigatorH = createStackNavigator(
   {
     MessList: HomeScreen,
     MessDetail: MessDetail
@@ -35,7 +27,22 @@ const AppSwitchNavigator = createStackNavigator(
   }
 );
 
-export default AppNavigator = createAppContainer(AppSwitchNavigator);
+const AppSwitchNavigatorF = createStackNavigator(
+  {
+    Favourites: Favourites,
+    MessDetail: MessDetail
+  },
+  {
+    headerMode: "none",
+    mode: "modal",
+    defaultNavigationOptions: {
+      gesturesEnabled: true
+    }
+  }
+);
+
+const AppNavigatorH = createAppContainer(AppSwitchNavigatorH);
+const AppNavigatorF = createAppContainer(AppSwitchNavigatorF);
 
 const styles = StyleSheet.create({
   container: {

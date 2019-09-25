@@ -49,7 +49,7 @@ export default class MessDetail extends Component {
   render() {
     const { navigation } = this.props;
     let data = navigation.getParam("mess");
-    console.log(data);
+    // console.log(data);
 
     let React_Native_Rating_Bar = [];
     for (var i = 1; i <= this.state.Max_Rating; i++) {
@@ -80,8 +80,7 @@ export default class MessDetail extends Component {
               <Image
                 style={styles.messImage1}
                 source={{
-                  uri:
-                    "https://res.cloudinary.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/bycr7qhntcdzglsfshwm"
+                  uri: data.profileUrl
                 }}
               />
             </View>

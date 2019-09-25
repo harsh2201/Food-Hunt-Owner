@@ -4429,9 +4429,10 @@ react-native-remote-svg@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/react-native-remote-svg/-/react-native-remote-svg-2.0.6.tgz#5f8bc7cefc18f4d37cf02f8158d6b2a9f534891d"
 
-react-native-responsive-fontsize@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-responsive-fontsize/-/react-native-responsive-fontsize-0.2.1.tgz#c18840e622808702d89f0a3286058f5732f9747d"
+react-native-responsive-fontsize@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-responsive-fontsize/-/react-native-responsive-fontsize-0.2.2.tgz#0a4daa5222812cbbc4ec19482deaafcfefbb77a5"
+  integrity sha512-UZ4W8Y8ERb3Dv7iJ5GMpo/MJsebQhRvJcXampix7pqyDb0eslI98rgRdO19dVYJvfZBhoVYWwW6u4nRs2Dp7Eg==
   dependencies:
     react-native-iphone-x-helper "^1.0.2"
 

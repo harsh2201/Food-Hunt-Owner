@@ -1,9 +1,15 @@
 import React, { Component } from "react";
-import { View, StyleSheet, StatusBar, SafeAreaView } from "react-native";
+import {
+  View,
+  StyleSheet,
+  StatusBar,
+  SafeAreaView,
+  ImageBackground
+} from "react-native";
 import FoodHunt from "./FoodHunt";
 import * as Font from "expo-font";
 import * as firebase from "firebase";
-import HomeScreen from "./Screens/HomeScreen2";
+// import HomeScreen from "./Screens/HomeScreen2";
 
 import firebaseConfig from "./data/config";
 if (!firebase.apps.length) {
@@ -33,10 +39,15 @@ class App extends Component {
         {this.state.isLoading ? (
           <View />
         ) : (
-          <View style={styles.container}>
-            {/* <FoodHunt /> */}
-            <HomeScreen />
-          </View>
+          <ImageBackground
+            sourc={require("./assets/loginBack.png")}
+            style={{ flex: 1 }}
+          >
+            <View style={styles.container}>
+              <FoodHunt />
+              {/* <HomeScreen /> */}
+            </View>
+          </ImageBackground>
         )}
       </View>
     );
@@ -46,7 +57,8 @@ export default App;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: StatusBar.currentHeight
+    flex: 1
+    // paddingTop: StatusBar.currentHeight
+    // backgroundColor: "orange"
   }
 });

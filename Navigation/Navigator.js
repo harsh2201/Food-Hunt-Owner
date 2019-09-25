@@ -4,6 +4,7 @@ import { BottomNavigation } from "react-native-paper";
 import Text from "../data/customText";
 import MessNavigation from "../Navigation/MessNavigation";
 import Developers from "../Screens/Developers";
+import Favourites from "../Screens/Favourites";
 // import SparkButton from "react-native-sparkbutton";
 
 export default class Navigator extends React.Component {
@@ -47,23 +48,10 @@ export default class Navigator extends React.Component {
         onIndexChange={index => this.setState({ index })}
         renderScene={BottomNavigation.SceneMap({
           home: () => {
-            return <MessNavigation />;
+            return <MessNavigation isHome={true} />;
           },
           favorites: () => {
-            return (
-              <View style={[styles.content]}>
-                <Text
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    textAlign: "center",
-                    fontSize: 25
-                  }}
-                >
-                  Favourites
-                </Text>
-              </View>
-            );
+            return <MessNavigation isHome={false} />;
           },
           profile: () => {
             return (
