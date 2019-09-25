@@ -184,9 +184,14 @@ export default class ScrollSwagger extends Component {
   //   });
   // };
 
-  _renderItem({ item, index }, parallaxProps) {
+  _renderItem = ({ item, index }, parallaxProps) => {
     return (
-      <View style={styles.item}>
+      <TouchableOpacity
+        onPress={() => {
+          this.props.navigation.navigate("MessDetail", { mess: item });
+        }}
+        style={styles.item}
+      >
         <ParallaxImage
           source={{ uri: item.profileUrl }}
           containerStyle={styles.imageContainer}
@@ -228,9 +233,9 @@ export default class ScrollSwagger extends Component {
             </Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
-  }
+  };
 
   render() {
     var headMov = this.state.scrollY.interpolate({
@@ -354,6 +359,7 @@ export default class ScrollSwagger extends Component {
                 }}
               >
                 <TouchableOpacity
+                  activeOpacity={1}
                   style={{
                     flex: 1,
                     // height: height / 15,
