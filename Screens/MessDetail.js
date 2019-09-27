@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 // import * as Font from "expo-font";
+import * as firebase from "firebase";
 
 import {
   TouchableOpacity,
@@ -12,13 +13,96 @@ import {
   SafeAreaView
 } from "react-native";
 import Text from "../data/customText";
-import { FlatList } from "react-native-gesture-handler";
-// import reviewScreen from "./reviewScreen";
-
+import { Card } from "native-base";
+import reviewScreen from "./reviewScreen.js";
+import {
+  createStackNavigator,
+  createAppContainer
+} from "react-navigation-stack";
+var mess_final_rating;
 const screenWidth = Math.round(Dimensions.get("window").width);
 const screenHeight = Math.round(Dimensions.get("window").height);
+class MessDetail extends Component {
+  componentDidMount() {
+    const { navigation } = this.props;
+    let data = navigation.getParam("mess");
+    //console.log(data);
+    firebase
+      .database()
+      .ref("Menu/" + data.mid + "/")
+      .on(
+        "value",
+        async function(snapshot) {
+          
+          let snap = JSON.stringify(snapshot);
+          data_mess = JSON.parse(snap);
+          //console.log(data_mess)
+          var te = [];
+          //console.log(te);
+          for (const dinn_lun in data_mess) {
+            const name = dinn_lun;
+            const element = data_mess[dinn_lun];
+            //console.log(element);
+            for (const imageUrl in element) {
+              te.push({
+                time: name,
+                imageUrl: element[imageUrl]
+              });
+            }
+          }
+          this.setState({
+            messOwner: te
+          });
+          //console.log(this.state.data);
+        }.bind(this)
+      );
+    var tot_rating;
+    firebase
+      .database()
+      .ref("Rating/" + data.mid + "/" + "Users/")
+      .on(
+        "value",
+        async function(snapshot) {
+          mess_final_rating=0;
+          tot_rating=0;
+          let mess_rating_snap = JSON.stringify(snapshot);
+          mess_rating = JSON.parse(mess_rating_snap);
+          //console.log("Mess rating: " + mess_rating);
+          //console.log("Total Children: " + snapshot.numChildren());
+          for (const user_id in mess_rating) {
+            total_rating = mess_rating[user_id];
+            for (const rates in total_rating) {
+              //console.log(total_rating[rates])
+              tot_rating += total_rating[rates];
+            }
+          }
+          mess_final_rating = tot_rating / snapshot.numChildren();
+          mess_final_rating.toFixed(1);
+          this.setState({
+            rating_mess: mess_final_rating,
+            total_users:snapshot.numChildren()
+          });
+        }.bind(this)
+      );
+    
 
-export default class MessDetail extends Component {
+    //console.log(firebase.auth().currentUser);
+    /*firebase.database().ref("Users/"+firebase.auth().currentUser+"/").on(
+        "value",
+        async function(snapshot) {
+          let snap = JSON.stringify(snapshot);
+          data_user = JSON.parse(snap);
+          var te = [];
+          // console.log(te);
+          console.log(data_user);
+          
+          this.setState({
+            user: te
+          });
+          // console.log(this.state.data);
+        }.bind(this)
+      );*/
+  }
   static navigationOptions = {
     header: null
   };
@@ -30,9 +114,14 @@ export default class MessDetail extends Component {
       Default_Rating: 2,
       Max_Rating: 5,
       children: [],
+      messOwner: [],
+      user: [],
       activeItemIndex: 0,
       unlimted: true,
-      limited: false
+      limited: false,
+      rating_mess: 0,
+      total_users:0,
+      current_rating:0,
     };
 
     this.Star =
@@ -49,8 +138,8 @@ export default class MessDetail extends Component {
   render() {
     const { navigation } = this.props;
     let data = navigation.getParam("mess");
-    console.log(data);
-
+    //console.log(data);
+    
     let React_Native_Rating_Bar = [];
     for (var i = 1; i <= this.state.Max_Rating; i++) {
       React_Native_Rating_Bar.push(
@@ -71,7 +160,17 @@ export default class MessDetail extends Component {
       );
     }
 
+    //console.log(userId);
+    firebase
+      .database()
+      .ref("Rating/" + data.mid + "/")
+      .update({
+        rating: this.state.rating_mess,
+        count:this.state.total_users
+      });
+
     return (
+      
       <View style={styles.safeArea}>
         <SafeAreaView>
           <ScrollView style={styles.scrollview}>
@@ -97,42 +196,46 @@ export default class MessDetail extends Component {
                 <View style={styles.subrat}>
                   <Text>Ratings</Text>
                   <Text style={{ color: "#FF4E00", fontWeight: "bold" }}>
-                    4.8
+                    {this.state.rating_mess}
                   </Text>
                 </View>
-
                 <View style={styles.subrat}>
-                  <Text>Unlimited</Text>
-                </View>
-
-                <View style={styles.subrat}>
-                  <Text>Limited</Text>
+                  <Image
+                    source={require("../assets/eye.png")}
+                    style={{ height: 18, width: 18 }}
+                  />
+                  <Text
+                    style={{
+                      color: "#FF4E00",
+                      fontWeight: "bold",
+                      textStyle: "italic"
+                    }}
+                  >
+                    215
+                  </Text>
                 </View>
               </View>
 
               <View></View>
             </View>
-            <View style={styles.menu}>
-              <FlatList
-                data={[
-                  { key: "Item1" },
-                  { key: "Item2" },
-                  { key: "Item3" },
-                  { key: "Item4" },
-                  { key: "Item5" },
-                  { key: "Item6" },
-                  { key: "Item7" },
-                  { key: "Item8" },
-                  { key: "Item9" },
-                  { key: "Item10" },
-                  { key: "Item11" },
-                  { key: "Item12" }
-                ]}
-                renderItem={({ item }) => (
-                  <Text style={styles.item}>{item.key}</Text>
-                )}
-              />
+            <View>
+              <Text style={styles.title}>Menu</Text>
             </View>
+            <ScrollView>
+              <Card title="MENU ITEMS">
+                {this.state.messOwner.map((u, i) => {
+                  return (
+                    <View style={{ flex: 1, flexDirection: "column" }}>
+                      <Text>{u.time}</Text>
+                      <Image
+                        style={{ height: 250, width: screenWidth }}
+                        source={{ uri: u.imageUrl }}
+                      />
+                    </View>
+                  );
+                })}
+              </Card>
+            </ScrollView>
 
             <View>
               <Text style={styles.title}>Rate Us</Text>
@@ -141,16 +244,54 @@ export default class MessDetail extends Component {
               <Text style={styles.textStyle}>
                 {this.state.Default_Rating} / {this.state.Max_Rating}
               </Text>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.button}
+                onPress={() => {
+                  firebase
+                    .database()
+                    .ref(
+                      "Rating/" +
+                        data.mid +
+                        "/" +
+                        "Users/" +
+                        firebase.auth().currentUser.uid +
+                        "/"
+                    )
+                    .update({
+                      rated: this.state.Default_Rating
+                    });
+                    firebase.database().ref("Rating/"+data.mid+"/").on("value",async function(snapshot){
+                      let rating_data=JSON.parse(JSON.stringify(snapshot));
+                      for(var i in rating_data){
+                        //console.log("XXX: "+i);
+                        let data_rating=rating_data;
+                        for(var z in data_rating){
+                          if(z=="rating"){
+                            console.log(data_rating[z]);
+                            this.setState({
+                              current_rating:data_rating[z]
+                            });
+                          }
+                        }
+                      }
+                    }).bind(this);
+                    console.log("Current rating: "+this.state.current_rating);
+                }}
+              >
+                <Text>{this.state.Default_Rating}</Text>
+              </TouchableOpacity>
             </View>
             <View>
               <Text style={styles.title}>Review</Text>
+              
               <Text style={{ marginLeft: 15 }}>
                 Food quality was good but the service was ok ok.
               </Text>
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.button}
-                // onPress={() => this.props.navigation.navigate("review")}
+                onPress={() => this.props.navigation.navigate("reviewScreen")}
               >
                 <Text>See all reviews</Text>
               </TouchableOpacity>
@@ -161,11 +302,16 @@ export default class MessDetail extends Component {
     );
   }
 }
+export default createStackNavigator(
+  {
+    mess: MessDetail,
+    reviewScreen: reviewScreen
+  },
+  {
+    initialRouteName: "mess"
+  }
+);
 
-// const AppNavigator = createStackNavigator({
-//   menu: menuScreen
-// });
-// export default createAppContainer(AppNavigator);
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -187,7 +333,7 @@ const styles = StyleSheet.create({
   },
   messImage: {
     height: screenHeight / 3,
-    width: screenWidth - 150,
+    width: screenHeight / 3,
     alignSelf: "center",
     backgroundColor: "#000000",
     zIndex: 1,
@@ -197,7 +343,7 @@ const styles = StyleSheet.create({
   },
   messImage1: {
     height: screenHeight / 3,
-    width: screenWidth - 150,
+    width: screenHeight / 3,
     borderRadius: 30
   },
   extra: {
@@ -224,6 +370,10 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 14
   },
+  subhead: {
+    fontSize: 18,
+    fontWeight: "500"
+  },
   mainDetails1: {
     height: screenHeight / 12
   },
@@ -234,8 +384,9 @@ const styles = StyleSheet.create({
   subrat: {
     justifyContent: "center",
     alignItems: "center",
-    width: screenWidth / 3,
+    width: screenWidth / 2,
     borderWidth: 1,
+    fontWeight: "bold",
     borderLeftColor: "white",
     borderBottomColor: "white",
     borderTopColor: "white",
