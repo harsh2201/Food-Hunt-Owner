@@ -247,7 +247,7 @@ class MessDetail extends Component {
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.button}
-                onPress={() => {
+                onPress={async() => {
                   firebase
                     .database()
                     .ref(
@@ -261,19 +261,15 @@ class MessDetail extends Component {
                     .update({
                       rated: this.state.Default_Rating
                     });
-                    firebase.database().ref("Rating/"+data.mid+"/").on("value",async function(snapshot){
+                    await firebase.database().ref("Rating/"+data.mid+"/").on("value",async function(snapshot){
                       let rating_data=JSON.parse(JSON.stringify(snapshot));
                       for(var i in rating_data){
-                        //console.log("XXX: "+i);
-                        let data_rating=rating_data;
-                        for(var z in data_rating){
-                          if(z=="rating"){
-                            console.log(data_rating[z]);
+                          if(i==="rating"){
+                            console.log("Rating: "+rating_data[i]);
                             this.setState({
-                              current_rating:data_rating[z]
+                              current_rating:rating_data[i]
                             });
                           }
-                        }
                       }
                     }).bind(this);
                     console.log("Current rating: "+this.state.current_rating);
