@@ -102,6 +102,7 @@ export default class Login extends Component {
             isModalVisible: false
           });
           this.props.navigation.navigate("Navigator");
+          console.log(uid);
         }, 2500);
       });
     }

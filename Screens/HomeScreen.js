@@ -62,36 +62,7 @@ export default class HomeScreen extends React.Component {
       );
   }
 
-  user = [
-    {
-      name: "Gujarati Food",
-      time: "11:00 AM",
-      EndTime: "1:00 PM",
-      Quantity: "Limited",
-      images: "https://bit.ly/CZHarshAvatar"
-    },
-    {
-      name: "Mexican Food",
-      time: "11:00 AM",
-      EndTime: "1:00 PM",
-      Quantity: "Limited",
-      images: "https://bit.ly/CZShivamAvatar"
-    },
-    {
-      name: "Punjabi Food",
-      time: "11:00 AM",
-      EndTime: "1:00 PM",
-      Quantity: "Limited",
-      images: "https://bit.ly/CZHarshAvatar"
-    },
-    {
-      name: "Punjabi Food",
-      time: "11:00 AM",
-      EndTime: "1:00 PM",
-      Quantity: "Limited",
-      images: "https://bit.ly/CZShivamAvatar"
-    }
-  ];
+
 
   data = [
     {
