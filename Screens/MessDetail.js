@@ -33,7 +33,6 @@ class MessDetail extends Component {
       .on(
         "value",
         async function(snapshot) {
-          
           let snap = JSON.stringify(snapshot);
           data_mess = JSON.parse(snap);
           //console.log(data_mess)
@@ -63,8 +62,8 @@ class MessDetail extends Component {
       .on(
         "value",
         async function(snapshot) {
-          mess_final_rating=0;
-          tot_rating=0;
+          mess_final_rating = 0;
+          tot_rating = 0;
           let mess_rating_snap = JSON.stringify(snapshot);
           mess_rating = JSON.parse(mess_rating_snap);
           //console.log("Mess rating: " + mess_rating);
@@ -80,11 +79,10 @@ class MessDetail extends Component {
           mess_final_rating.toFixed(1);
           this.setState({
             rating_mess: mess_final_rating,
-            total_users:snapshot.numChildren()
+            total_users: snapshot.numChildren()
           });
         }.bind(this)
       );
-    
 
     //console.log(firebase.auth().currentUser);
     /*firebase.database().ref("Users/"+firebase.auth().currentUser+"/").on(
@@ -120,8 +118,8 @@ class MessDetail extends Component {
       unlimted: true,
       limited: false,
       rating_mess: 0,
-      total_users:0,
-      current_rating:0,
+      total_users: 0,
+      current_rating: 0
     };
 
     this.Star =
@@ -139,7 +137,7 @@ class MessDetail extends Component {
     const { navigation } = this.props;
     let data = navigation.getParam("mess");
     //console.log(data);
-    
+
     let React_Native_Rating_Bar = [];
     for (var i = 1; i <= this.state.Max_Rating; i++) {
       React_Native_Rating_Bar.push(
@@ -166,11 +164,10 @@ class MessDetail extends Component {
       .ref("Rating/" + data.mid + "/")
       .update({
         rating: this.state.rating_mess,
-        count:this.state.total_users
+        count: this.state.total_users
       });
 
     return (
-      
       <View style={styles.safeArea}>
         <SafeAreaView>
           <ScrollView style={styles.scrollview}>
@@ -247,8 +244,8 @@ class MessDetail extends Component {
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.button}
-                onPress={async() => {
-                  firebase
+                onPress={async () => {
+                  await firebase
                     .database()
                     .ref(
                       "Rating/" +
@@ -261,18 +258,20 @@ class MessDetail extends Component {
                     .update({
                       rated: this.state.Default_Rating
                     });
-                    await firebase.database().ref("Rating/"+data.mid+"/").on("value",async function(snapshot){
-                      let rating_data=JSON.parse(JSON.stringify(snapshot));
-                      for(var i in rating_data){
-                          if(i==="rating"){
-                            console.log("Rating: "+rating_data[i]);
-                            this.setState({
-                              current_rating:rating_data[i]
-                            });
-                          }
-                      }
-                    }).bind(this);
-                    console.log("Current rating: "+this.state.current_rating);
+                  await firebase
+                    .database()
+                    .ref("Rating/" + data.mid + "/")
+                    .on("value", async snapshot => {
+                      let rating_data = JSON.parse(JSON.stringify(snapshot));
+                      this.setState({
+                        current_rating: rating_data["rating"]
+                      });
+
+                      console.log(
+                        "Current rating: " + this.state.current_rating
+                      );
+                    })
+                    .bind(this);
                 }}
               >
                 <Text>{this.state.Default_Rating}</Text>
@@ -280,7 +279,7 @@ class MessDetail extends Component {
             </View>
             <View>
               <Text style={styles.title}>Review</Text>
-              
+
               <Text style={{ marginLeft: 15 }}>
                 Food quality was good but the service was ok ok.
               </Text>
