@@ -79,11 +79,12 @@ export default class Login extends Component {
         .auth()
         .signInWithCredential(credential)
         .catch(error => {
-          setTimeout(() => {
-            this.setState({
-              isModalVisible: false
-            });
-          }, 2500);
+          this.setState({
+            isModalVisible: false
+          });
+          // setTimeout(() => {
+
+          // }, 00);
           console.log(error);
         });
       firebase.auth().onAuthStateChanged(user => {
@@ -97,13 +98,19 @@ export default class Login extends Component {
             email: user.email,
             type: "google"
           });
-        }
-        setTimeout(() => {
-          this.setState({
-            isModalVisible: false
-          });
           this.props.navigation.navigate("Navigator");
-        }, 2500);
+        }
+
+        // setTimeout(() => {
+        //   this.setState({
+        //     isModalVisible: false
+        //   });
+
+        // }, 00);
+      });
+    } else {
+      this.setState({
+        isModalVisible: false
       });
     }
   };
@@ -143,11 +150,16 @@ export default class Login extends Component {
             type: "fb"
           });
         }
-        setTimeout(() => {
-          this.setState({
-            isModalVisible: false
-          });
-        }, 2500);
+        this.setState({
+          isModalVisible: false
+        });
+        // setTimeout(() => {
+
+        // }, 0);
+      });
+    } else {
+      this.setState({
+        isModalVisible: false
       });
     }
   };
@@ -185,6 +197,7 @@ export default class Login extends Component {
               style={{ flex: 1 }}
               source={require("../assets/Lottie/office.json")}
               // progress={this.state.progress}
+              speed={3}
               autoPlay={true}
               loop={true}
             />

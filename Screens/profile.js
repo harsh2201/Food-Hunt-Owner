@@ -40,6 +40,7 @@ export default class profile extends React.Component {
               source={require("../assets/Lottie/ninja.json")}
               autoPlay={true}
               loop={true}
+              speed={1.25}
             />
           </ImageBackground>
         </View>
