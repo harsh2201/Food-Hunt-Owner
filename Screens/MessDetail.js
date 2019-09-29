@@ -27,8 +27,8 @@ class MessDetail extends Component {
   componentDidMount() {
     const { navigation } = this.props;
     let data = navigation.getParam("mess");
-    
-    //console.log(data);
+
+    console.log(data);
     firebase
       .database()
       .ref("Menu/" + data.mid + "/")
@@ -37,13 +37,13 @@ class MessDetail extends Component {
         async function(snapshot) {
           let snap = JSON.stringify(snapshot);
           data_mess = JSON.parse(snap);
-          //console.log(data_mess)
+          console.log("Data messs", data_mess);
           var te = [];
-          //console.log(te);
+          // console.log("TE", te);
           for (const dinn_lun in data_mess) {
             const name = dinn_lun;
             const element = data_mess[dinn_lun];
-            //console.log(element);
+            console.log("Image element", element);
             for (const imageUrl in element) {
               te.push({
                 time: name,
@@ -62,20 +62,24 @@ class MessDetail extends Component {
       .ref("Rating/" + data.mid + "/" + "Users/")
       .on(
         "value",
-        async function(snapshot) {  
-        this.setState({
+        async function(snapshot) {
+          this.setState({
             total_users: snapshot.numChildren()
           });
         }.bind(this)
       );
 
-      firebase.database().ref("Rating/"+data.mid+"/").on("value",snapshot =>{
-        let rating_data_mess=JSON.parse(JSON.stringify(snapshot));
-          this.setState({
-          current_rating:rating_data_mess["rating"],
-          NUser:rating_data_mess["count"]
+    firebase
+      .database()
+      .ref("Rating/" + data.mid + "/")
+      .on("value", snapshot => {
+        let rating_data_mess = JSON.parse(JSON.stringify(snapshot));
+        this.setState({
+          current_rating: rating_data_mess["rating"],
+          NUser: rating_data_mess["count"]
         });
-      }).bind(this);
+      })
+      .bind(this);
   }
   static navigationOptions = {
     header: null
@@ -96,7 +100,7 @@ class MessDetail extends Component {
       rating_mess: 0,
       total_users: 0,
       current_rating: 0,
-      NUser:0
+      NUser: 0
     };
     this.Star =
       "http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png";
@@ -141,8 +145,8 @@ class MessDetail extends Component {
       .update({
         count: this.state.total_users
       });
-    console.log("Main current rating: "+this.state.current_rating);
-    console.log("Current user: "+this.state.NUser);
+    console.log("Main current rating: " + this.state.current_rating);
+    console.log("Current user: " + this.state.NUser);
     return (
       <View style={styles.safeArea}>
         <SafeAreaView>
@@ -167,7 +171,7 @@ class MessDetail extends Component {
 
               <View style={styles.rating}>
                 <View style={styles.subrat}>
-                <Image
+                  <Image
                     source={require("../assets/star.png")}
                     style={{ height: 18, width: 18 }}
                   />
@@ -182,9 +186,9 @@ class MessDetail extends Component {
                   />
                   <Text
                     style={{
-                      color: "#FF4E00",
-                      fontWeight: "bold",
-                      textStyle: "italic"
+                      color: "#FF4E00"
+                      // fontWeight: "bold",
+                      // textStyle: "italic"
                     }}
                   >
                     215
@@ -192,7 +196,7 @@ class MessDetail extends Component {
                 </View>
               </View>
 
-              <View></View>
+              {/* <View></View> */}
             </View>
             <View>
               <Text style={styles.title}>Menu</Text>
@@ -224,40 +228,41 @@ class MessDetail extends Component {
                 activeOpacity={0.7}
                 style={styles.button}
                 onPress={() => {
-                  
-                firebase
+                  firebase
                     .database()
                     .ref(
                       "Rating/" +
                         data.mid +
                         "/" +
-                        "Users/" +  
+                        "Users/" +
                         firebase.auth().currentUser.uid +
                         "/"
                     )
                     .update({
                       rated: this.state.Default_Rating
                     });
-                 firebase
+                  firebase
                     .database()
                     .ref("Rating/" + data.mid + "/")
                     .on("value", snapshot => {
-                      console.log(
-                        "Rated rating: " + this.state.Default_Rating
-                      );
-                      console.log(
-                        "Current Users: " + this.state.NUser
-                      );
-                      
-                      varCurrentRating=((this.state.current_rating*this.state.NUser)+this.state.Default_Rating)/(this.state.NUser+1);
-                      varCurrentRating= varCurrentRating.toFixed(1);
+                      console.log("Rated rating: " + this.state.Default_Rating);
+                      console.log("Current Users: " + this.state.NUser);
+
+                      varCurrentRating =
+                        (this.state.current_rating * this.state.NUser +
+                          this.state.Default_Rating) /
+                        (this.state.NUser + 1);
+                      varCurrentRating = varCurrentRating.toFixed(1);
                       console.log(
                         "After Updation of Rating: " + varCurrentRating
                       );
                     })
                     .bind(this);
-                    firebase.database().ref("Rating/"+data.mid).update({
-                      rating:varCurrentRating
+                  firebase
+                    .database()
+                    .ref("Rating/" + data.mid)
+                    .update({
+                      rating: varCurrentRating
                     });
                 }}
               >
