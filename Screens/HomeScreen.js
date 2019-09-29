@@ -6,12 +6,8 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
-  TouchableHighlight,
   Button
 } from "react-native";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import { SearchBar, Rating } from "react-native-elements";
 import { Container, Card, Picker } from "native-base";

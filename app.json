@@ -4,11 +4,7 @@
     "slug": "FoodHunt",
     "privacy": "public",
     "sdkVersion": "34.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "facebookScheme": "fb2917030818370588",
     "orientation": "portrait",
@@ -22,9 +18,7 @@
       "fallbackToCacheTimeout": 0,
       "checkAutomatically": "ON_LOAD"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "foodhunt.charusat.harsh2201",
       "supportsTablet": true

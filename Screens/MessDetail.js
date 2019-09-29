@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 // import * as Font from "expo-font";
+import * as firebase from "firebase";
 
 import {
   TouchableOpacity,
@@ -12,13 +13,74 @@ import {
   SafeAreaView
 } from "react-native";
 import Text from "../data/customText";
-import { FlatList } from "react-native-gesture-handler";
-// import reviewScreen from "./reviewScreen";
+import { Card } from "native-base";
+import reviewScreen from "./reviewScreen.js";
+import {
+  createStackNavigator,
+  createAppContainer
+} from "react-navigation-stack";
+var varCurrentRating;
 
 const screenWidth = Math.round(Dimensions.get("window").width);
 const screenHeight = Math.round(Dimensions.get("window").height);
+class MessDetail extends Component {
+  componentDidMount() {
+    const { navigation } = this.props;
+    let data = navigation.getParam("mess");
 
-export default class MessDetail extends Component {
+    console.log(data);
+    firebase
+      .database()
+      .ref("Menu/" + data.mid + "/")
+      .on(
+        "value",
+        async function(snapshot) {
+          let snap = JSON.stringify(snapshot);
+          data_mess = JSON.parse(snap);
+          console.log("Data messs", data_mess);
+          var te = [];
+          // console.log("TE", te);
+          for (const dinn_lun in data_mess) {
+            const name = dinn_lun;
+            const element = data_mess[dinn_lun];
+            console.log("Image element", element);
+            for (const imageUrl in element) {
+              te.push({
+                time: name,
+                imageUrl: element[imageUrl]
+              });
+            }
+          }
+          this.setState({
+            messOwner: te
+          });
+          //console.log(this.state.data);
+        }.bind(this)
+      );
+    firebase
+      .database()
+      .ref("Rating/" + data.mid + "/" + "Users/")
+      .on(
+        "value",
+        async function(snapshot) {
+          this.setState({
+            total_users: snapshot.numChildren()
+          });
+        }.bind(this)
+      );
+
+    firebase
+      .database()
+      .ref("Rating/" + data.mid + "/")
+      .on("value", snapshot => {
+        let rating_data_mess = JSON.parse(JSON.stringify(snapshot));
+        this.setState({
+          current_rating: rating_data_mess["rating"],
+          NUser: rating_data_mess["count"]
+        });
+      })
+      .bind(this);
+  }
   static navigationOptions = {
     header: null
   };
@@ -30,11 +92,16 @@ export default class MessDetail extends Component {
       Default_Rating: 2,
       Max_Rating: 5,
       children: [],
+      messOwner: [],
+      user: [],
       activeItemIndex: 0,
       unlimted: true,
-      limited: false
+      limited: false,
+      rating_mess: 0,
+      total_users: 0,
+      current_rating: 0,
+      NUser: 0
     };
-
     this.Star =
       "http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png";
 
@@ -49,7 +116,7 @@ export default class MessDetail extends Component {
   render() {
     const { navigation } = this.props;
     let data = navigation.getParam("mess");
-    // console.log(data);
+    //console.log(data);
 
     let React_Native_Rating_Bar = [];
     for (var i = 1; i <= this.state.Max_Rating; i++) {
@@ -71,6 +138,15 @@ export default class MessDetail extends Component {
       );
     }
 
+    //console.log(userId);
+    firebase
+      .database()
+      .ref("Rating/" + data.mid + "/")
+      .update({
+        count: this.state.total_users
+      });
+    console.log("Main current rating: " + this.state.current_rating);
+    console.log("Current user: " + this.state.NUser);
     return (
       <View style={styles.safeArea}>
         <SafeAreaView>
@@ -80,7 +156,8 @@ export default class MessDetail extends Component {
               <Image
                 style={styles.messImage1}
                 source={{
-                  uri: data.profileUrl
+                  uri:
+                    "https://res.cloudinary.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/bycr7qhntcdzglsfshwm"
                 }}
               />
             </View>
@@ -94,44 +171,51 @@ export default class MessDetail extends Component {
 
               <View style={styles.rating}>
                 <View style={styles.subrat}>
-                  <Text>Ratings</Text>
+                  <Image
+                    source={require("../assets/star.png")}
+                    style={{ height: 18, width: 18 }}
+                  />
                   <Text style={{ color: "#FF4E00", fontWeight: "bold" }}>
-                    4.8
+                    {this.state.current_rating}
                   </Text>
                 </View>
-
                 <View style={styles.subrat}>
-                  <Text>Unlimited</Text>
-                </View>
-
-                <View style={styles.subrat}>
-                  <Text>Limited</Text>
+                  <Image
+                    source={require("../assets/eye.png")}
+                    style={{ height: 18, width: 18 }}
+                  />
+                  <Text
+                    style={{
+                      color: "#FF4E00"
+                      // fontWeight: "bold",
+                      // textStyle: "italic"
+                    }}
+                  >
+                    215
+                  </Text>
                 </View>
               </View>
 
-              <View></View>
+              {/* <View></View> */}
             </View>
-            <View style={styles.menu}>
-              <FlatList
-                data={[
-                  { key: "Item1" },
-                  { key: "Item2" },
-                  { key: "Item3" },
-                  { key: "Item4" },
-                  { key: "Item5" },
-                  { key: "Item6" },
-                  { key: "Item7" },
-                  { key: "Item8" },
-                  { key: "Item9" },
-                  { key: "Item10" },
-                  { key: "Item11" },
-                  { key: "Item12" }
-                ]}
-                renderItem={({ item }) => (
-                  <Text style={styles.item}>{item.key}</Text>
-                )}
-              />
+            <View>
+              <Text style={styles.title}>Menu</Text>
             </View>
+            <ScrollView>
+              <Card title="MENU ITEMS">
+                {this.state.messOwner.map((u, i) => {
+                  return (
+                    <View style={{ flex: 1, flexDirection: "column" }}>
+                      <Text>{u.time}</Text>
+                      <Image
+                        style={{ height: 250, width: screenWidth }}
+                        source={{ uri: u.imageUrl }}
+                      />
+                    </View>
+                  );
+                })}
+              </Card>
+            </ScrollView>
 
             <View>
               <Text style={styles.title}>Rate Us</Text>
@@ -140,16 +224,61 @@ export default class MessDetail extends Component {
               <Text style={styles.textStyle}>
                 {this.state.Default_Rating} / {this.state.Max_Rating}
               </Text>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.button}
+                onPress={() => {
+                  firebase
+                    .database()
+                    .ref(
+                      "Rating/" +
+                        data.mid +
+                        "/" +
+                        "Users/" +
+                        firebase.auth().currentUser.uid +
+                        "/"
+                    )
+                    .update({
+                      rated: this.state.Default_Rating
+                    });
+                  firebase
+                    .database()
+                    .ref("Rating/" + data.mid + "/")
+                    .on("value", snapshot => {
+                      console.log("Rated rating: " + this.state.Default_Rating);
+                      console.log("Current Users: " + this.state.NUser);
+
+                      varCurrentRating =
+                        (this.state.current_rating * this.state.NUser +
+                          this.state.Default_Rating) /
+                        (this.state.NUser + 1);
+                      varCurrentRating = varCurrentRating.toFixed(1);
+                      console.log(
+                        "After Updation of Rating: " + varCurrentRating
+                      );
+                    })
+                    .bind(this);
+                  firebase
+                    .database()
+                    .ref("Rating/" + data.mid)
+                    .update({
+                      rating: varCurrentRating
+                    });
+                }}
+              >
+                <Text>{this.state.Default_Rating}</Text>
+              </TouchableOpacity>
             </View>
             <View>
               <Text style={styles.title}>Review</Text>
+
               <Text style={{ marginLeft: 15 }}>
                 Food quality was good but the service was ok ok.
               </Text>
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.button}
-                // onPress={() => this.props.navigation.navigate("review")}
+                onPress={() => this.props.navigation.navigate("reviewScreen")}
               >
                 <Text>See all reviews</Text>
               </TouchableOpacity>
@@ -160,11 +289,16 @@ export default class MessDetail extends Component {
     );
   }
 }
+export default createStackNavigator(
+  {
+    mess: MessDetail,
+    reviewScreen: reviewScreen
+  },
+  {
+    initialRouteName: "mess"
+  }
+);
 
-// const AppNavigator = createStackNavigator({
-//   menu: menuScreen
-// });
-// export default createAppContainer(AppNavigator);
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -186,7 +320,7 @@ const styles = StyleSheet.create({
   },
   messImage: {
     height: screenHeight / 3,
-    width: screenWidth - 150,
+    width: screenHeight / 3,
     alignSelf: "center",
     backgroundColor: "#000000",
     zIndex: 1,
@@ -196,7 +330,7 @@ const styles = StyleSheet.create({
   },
   messImage1: {
     height: screenHeight / 3,
-    width: screenWidth - 150,
+    width: screenHeight / 3,
     borderRadius: 30
   },
   extra: {
@@ -223,6 +357,10 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 14
   },
+  subhead: {
+    fontSize: 18,
+    fontWeight: "500"
+  },
   mainDetails1: {
     height: screenHeight / 12
   },
@@ -233,8 +371,9 @@ const styles = StyleSheet.create({
   subrat: {
     justifyContent: "center",
     alignItems: "center",
-    width: screenWidth / 3,
+    width: screenWidth / 2,
     borderWidth: 1,
+    fontWeight: "bold",
     borderLeftColor: "white",
     borderBottomColor: "white",
     borderTopColor: "white",
