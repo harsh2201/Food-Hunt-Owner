@@ -115,6 +115,8 @@ export default class ScrollSwagger extends Component {
               mid: element.Credentials.mid,
               // mid: element.Credentials.mid,
               lunch: element.time.lunch.open + " - " + element.time.lunch.close,
+              dinner:
+                element.time.dinner.open + " - " + element.time.dinner.close,
               email: element.Contact.email,
               mobileNo: element.Contact.mobileNo,
               profileUrl: element.profileUrl,
@@ -188,9 +190,13 @@ export default class ScrollSwagger extends Component {
 
   _renderFilter = () => {
     return (
-      <View
-        style={{ height: "100%", width: "100%", backgroundColor: "red" }}
-      ></View>
+      <View style={{ height: "100%", width: "100%" }}>
+        <View>
+          <TouchableOpacity>
+            <Text></Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     );
   };
 
@@ -257,8 +263,8 @@ export default class ScrollSwagger extends Component {
       inputRange: [0, 180, 181],
       outputRange: [
         SLIDERHEIGHT + 15,
-        StatusBar.currentHeight,
-        StatusBar.currentHeight
+        StatusBar.currentHeight + 10,
+        StatusBar.currentHeight + 10
       ]
     });
     var searchCorner = this.state.scrollY.interpolate({
@@ -271,7 +277,7 @@ export default class ScrollSwagger extends Component {
     });
     var searchMarginH = this.state.scrollY.interpolate({
       inputRange: [0, 180, 181],
-      outputRange: [18, 9, 9]
+      outputRange: [25, 9, 9]
     });
     var imgOp = this.state.scrollY.interpolate({
       inputRange: [0, 180, 181],
@@ -363,7 +369,7 @@ export default class ScrollSwagger extends Component {
                 }}
                 value={this.state.searchQuery}
               />
-              <View
+              {/* <View
                 style={{
                   flex: 1,
                   marginHorizontal: 10
@@ -397,7 +403,7 @@ export default class ScrollSwagger extends Component {
                     source={require("../assets/filter.png")}
                   />
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </Animated.View>
           </Animated.View>
           {this.state.isModalVisible ? (
@@ -425,41 +431,7 @@ export default class ScrollSwagger extends Component {
           ) : (
             <View />
           )}
-          {true ? (
-            <Modal
-              isVisible={this.state.isFilterVisible}
-              backdropColor="#000"
-              backdropOpacity={0.8}
-              animationIn="zoomInDown"
-              animationOut="zoomOutUp"
-              animationInTiming={600}
-              animationOutTiming={600}
-              backdropTransitionInTiming={800}
-              backdropTransitionOutTiming={800}
-              style={styles.modalFilter}
-              onBackButtonPress={() => {
-                this.setState({
-                  isFilterVisible: false
-                });
-              }}
-              onDismiss={() => {
-                this.setState({
-                  isFilterVisible: false
-                });
-              }}
-              onBackdropPress={() => {
-                this.setState({
-                  isFilterVisible: false
-                });
-              }}
-            >
-              <View style={styles.modalContentFilter}>
-                {this._renderFilter()}
-              </View>
-            </Modal>
-          ) : (
-            <View />
-          )}
+          
         </ImageBackground>
       </View>
     );

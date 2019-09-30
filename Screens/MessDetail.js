@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import * as Font from "expo-font";
 import * as firebase from "firebase";
 
 import {
@@ -10,19 +9,21 @@ import {
   Image,
   Dimensions,
   StatusBar,
-  SafeAreaView
+  SafeAreaView,
+  Animated
 } from "react-native";
 import Text from "../data/customText";
 import { Card } from "native-base";
 import reviewScreen from "./reviewScreen.js";
-import {
-  createStackNavigator,
-  createAppContainer
-} from "react-navigation-stack";
+import { createStackNavigator } from "react-navigation-stack";
+import Modal from "react-native-modal";
 var varCurrentRating;
 
 const screenWidth = Math.round(Dimensions.get("window").width);
 const screenHeight = Math.round(Dimensions.get("window").height);
+const HEADER_MAX_HEIGHT = screenHeight / 3;
+const HEADER_MIN_HEIGHT = 60;
+const HEADER_SCROLL_DISTANCE = 140;
 class MessDetail extends Component {
   constructor() {
     super();
@@ -40,7 +41,10 @@ class MessDetail extends Component {
       total_users: 0,
       current_rating: 0,
       NUser: 0,
-      views: 0
+      views: 0,
+      scrollY: new Animated.Value(0),
+      showMenu: false,
+      image: ""
     };
     this.Star =
       "http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png";
@@ -132,6 +136,22 @@ class MessDetail extends Component {
   }
 
   render() {
+    const headerHeight = this.state.scrollY.interpolate({
+      inputRange: [0, HEADER_SCROLL_DISTANCE],
+      outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
+      extrapolate: "clamp"
+    });
+    const imageOpacity = this.state.scrollY.interpolate({
+      inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+      outputRange: [1, 1, 0],
+      extrapolate: "clamp"
+    });
+    const imageTranslate = this.state.scrollY.interpolate({
+      inputRange: [0, HEADER_SCROLL_DISTANCE],
+      outputRange: [0, -50],
+      extrapolate: "clamp"
+    });
+
     const { navigation } = this.props;
     let data = navigation.getParam("mess");
     //console.log(data);
@@ -168,140 +188,234 @@ class MessDetail extends Component {
     return (
       <View style={styles.safeArea}>
         <SafeAreaView>
-          <ScrollView style={styles.scrollview}>
-            <View style={styles.top}></View>
-            <View style={styles.messImage}>
+          <ScrollView
+            style={styles.scrollview}
+            scrollEventThrottle={16}
+            onScroll={Animated.event([
+              { nativeEvent: { contentOffset: { y: this.state.scrollY } } }
+            ])}
+          >
+            {/* <View style={styles.top}></View> */}
+            {/* <View style={styles.messImage}>
               <Image
                 style={styles.messImage1}
                 source={{
-                  uri:
-                    "https://res.cloudinary.com/swiggy/image/upload/f_auto,q_auto,fl_lossy/bycr7qhntcdzglsfshwm"
+                  uri: data.profileUrl
                 }}
               />
-            </View>
+            </View> */}
 
-            <View style={styles.extra} />
-            <View style={styles.mainDetails}>
-              <View style={styles.mainDetails1}>
-                <Text style={styles.messName}>{data.name}</Text>
-                <Text style={styles.smallDetails}>{data.time}</Text>
-              </View>
-
-              <View style={styles.rating}>
-                <View style={styles.subrat}>
-                  <Image
-                    source={require("../assets/star.png")}
-                    style={{ height: 18, width: 18 }}
-                  />
-                  <Text style={{ color: "#FF4E00", fontWeight: "bold" }}>
-                    {this.state.current_rating}
+            <View style={styles.scrollViewContent}>
+              {/* <View style={styles.extra} /> */}
+              <View style={styles.mainDetails}>
+                <View style={styles.mainDetails1}>
+                  <Text style={styles.smallDetails}>
+                    {"Lunch  " + data.lunch}
+                  </Text>
+                  <Text style={styles.smallDetails}>
+                    {"Dinner  " + data.dinner}
                   </Text>
                 </View>
-                <View style={styles.subrat}>
-                  <Image
-                    source={require("../assets/eye.png")}
-                    style={{ height: 18, width: 18 }}
-                  />
-                  <Text
-                    style={{
-                      color: "#FF4E00"
-                      // fontWeight: "bold",
-                      // textStyle: "italic"
-                    }}
-                  >
-                    {this.state.views}
-                  </Text>
+
+                <View style={styles.rating}>
+                  <View style={styles.subrat}>
+                    <Image
+                      source={require("../assets/star.png")}
+                      style={{ height: 30, width: 30 }}
+                    />
+                    <Text
+                      style={{
+                        color: "#FF4E00",
+                        // fontWeight: "bold",
+                        fontSize: 18
+                      }}
+                    >
+                      {this.state.current_rating}
+                    </Text>
+                  </View>
+                  <View style={styles.subrat}>
+                    <Image
+                      source={require("../assets/eye.png")}
+                      style={{ height: 30, width: 30 }}
+                    />
+                    <Text
+                      style={{
+                        color: "#FF4E00",
+                        // fontWeight: "bold",
+                        // textStyle: "italic"
+                        fontSize: 18
+                      }}
+                    >
+                      {this.state.views}
+                    </Text>
+                  </View>
                 </View>
               </View>
-
-              {/* <View></View> */}
-            </View>
-            <View>
-              <Text style={styles.title}>Menu</Text>
-            </View>
-            <ScrollView>
+              {/* <View>
+                <Text style={styles.title}>Menu</Text>
+              </View> */}
               <Card title="MENU ITEMS">
                 {this.state.messOwner.map((u, i) => {
                   return (
                     <View style={{ flex: 1, flexDirection: "column" }}>
-                      <Text>{u.time}</Text>
-                      <Image
-                        style={{ height: 250, width: screenWidth }}
-                        source={{ uri: u.imageUrl }}
-                      />
+                      <Text style={{ textAlign: "center", fontSize: 20 }}>
+                        {u.time}
+                      </Text>
+                      <TouchableOpacity
+                        style={{ height: screenHeight / 2, width: screenWidth }}
+                        onPress={() => {
+                          this.setState({ showMenu: true, image: u.imageUrl });
+                        }}
+                        activeOpacity={1}
+                      >
+                        <Image
+                          style={{
+                            height: screenHeight / 2,
+                            width: screenWidth,
+                            resizeMode: "contain"
+                          }}
+                          source={{ uri: u.imageUrl }}
+                        />
+                      </TouchableOpacity>
                     </View>
                   );
                 })}
               </Card>
-            </ScrollView>
 
-            <View>
-              <Text style={styles.title}>Rate Us</Text>
+              <View>
+                <Text style={styles.title}>Rate Us</Text>
 
-              <View style={styles.childView}>{React_Native_Rating_Bar}</View>
-              <Text style={styles.textStyle}>
-                {this.state.Default_Rating} / {this.state.Max_Rating}
-              </Text>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.button}
-                onPress={() => {
-                  firebase
-                    .database()
-                    .ref(
-                      "Rating/" +
-                        data.mid +
-                        "/" +
-                        "Users/" +
-                        firebase.auth().currentUser.uid +
-                        "/"
-                    )
-                    .update({
-                      rated: this.state.Default_Rating
-                    });
-                  firebase
-                    .database()
-                    .ref("Rating/" + data.mid + "/")
-                    .on("value", snapshot => {
-                      // console.log("Rated rating: " + this.state.Default_Rating);
-                      // console.log("Current Users: " + this.state.NUser);
+                <View style={styles.childView}>{React_Native_Rating_Bar}</View>
+                <Text style={styles.textStyle}>
+                  {this.state.Default_Rating} / {this.state.Max_Rating}
+                </Text>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.button}
+                  onPress={() => {
+                    firebase
+                      .database()
+                      .ref(
+                        "Rating/" +
+                          data.mid +
+                          "/" +
+                          "Users/" +
+                          firebase.auth().currentUser.uid +
+                          "/"
+                      )
+                      .update({
+                        rated: this.state.Default_Rating
+                      });
+                    firebase
+                      .database()
+                      .ref("Rating/" + data.mid + "/")
+                      .on("value", snapshot => {
+                        // console.log("Rated rating: " + this.state.Default_Rating);
+                        // console.log("Current Users: " + this.state.NUser);
 
-                      varCurrentRating =
-                        (this.state.current_rating * this.state.NUser +
-                          this.state.Default_Rating) /
-                        (this.state.NUser + 1);
-                      varCurrentRating = varCurrentRating.toFixed(1);
-                      // console.log(
-                      //   "After Updation of Rating: " + varCurrentRating
-                      // );
-                    })
-                    .bind(this);
-                  firebase
-                    .database()
-                    .ref("Rating/" + data.mid)
-                    .update({
-                      rating: varCurrentRating
-                    });
-                }}
-              >
-                <Text>{this.state.Default_Rating}</Text>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <Text style={styles.title}>Review</Text>
+                        varCurrentRating =
+                          (this.state.current_rating * this.state.NUser +
+                            this.state.Default_Rating) /
+                          (this.state.NUser + 1);
+                        varCurrentRating = varCurrentRating.toFixed(1);
+                        // console.log(
+                        //   "After Updation of Rating: " + varCurrentRating
+                        // );
+                      })
+                      .bind(this);
+                    firebase
+                      .database()
+                      .ref("Rating/" + data.mid)
+                      .update({
+                        rating: varCurrentRating
+                      });
+                  }}
+                >
+                  <Text>{this.state.Default_Rating}</Text>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <Text style={styles.title}>Review</Text>
 
-              <Text style={{ marginLeft: 15 }}>
-                Food quality was good but the service was ok ok.
-              </Text>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.button}
-                onPress={() => this.props.navigation.navigate("reviewScreen")}
-              >
-                <Text>See all reviews</Text>
-              </TouchableOpacity>
+                <Text style={{ marginLeft: 15 }}>
+                  Food quality was good but the service was ok ok.
+                </Text>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.button}
+                  onPress={() => this.props.navigation.navigate("reviewScreen")}
+                >
+                  <Text>See all reviews</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </ScrollView>
+          <Animated.View style={[styles.header, { height: headerHeight }]}>
+            <Animated.Image
+              style={[
+                styles.backgroundImage,
+                {
+                  opacity: imageOpacity,
+                  transform: [{ translateY: imageTranslate }]
+                }
+              ]}
+              source={{ uri: data.profileUrl }}
+            />
+            <View style={styles.bar}>
+              <Text style={styles.title}>{data.name}</Text>
+            </View>
+          </Animated.View>
+          {/* {this.state.showMenu ? ( */}
+          <Modal
+            isVisible={this.state.showMenu}
+            backdropColor="#000"
+            backdropOpacity={0.8}
+            animationIn="zoomInDown"
+            animationOut="zoomOutUp"
+            animationInTiming={600}
+            animationOutTiming={600}
+            backdropTransitionInTiming={800}
+            backdropTransitionOutTiming={800}
+            style={styles.modalFilter}
+            onBackButtonPress={() => {
+              this.setState({
+                showMenu: false
+              });
+            }}
+            onDismiss={() => {
+              this.setState({
+                showMenu: false
+              });
+            }}
+            onBackdropPress={() => {
+              this.setState({
+                showMenu: false
+              });
+            }}
+          >
+            <View
+              style={{
+                height: screenHeight / 1.4,
+                width: screenWidth - 40,
+                backgroundColor: "white",
+                borderRadius: 15,
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Image
+                style={{
+                  height: "90%",
+                  width: "90%",
+                  resizeMode: "contain"
+                }}
+                source={{ uri: this.state.image }}
+              />
+            </View>
+          </Modal>
+          {/* ) : (
+            <View />
+          )} */}
         </SafeAreaView>
       </View>
     );
@@ -323,7 +437,7 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight
   },
   scrollview: {
-    backgroundColor: "white"
+    // backgroundColor: "white"
   },
   top: {
     height: screenHeight / 3,
@@ -372,8 +486,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   smallDetails: {
-    marginLeft: 10,
-    fontSize: 14
+    // marginLeft: 10,
+    textAlign: "center",
+    fontSize: 20
   },
   subhead: {
     fontSize: 18,
@@ -455,5 +570,55 @@ const styles = StyleSheet.create({
     opacity: 0.1,
     marginLeft: 10,
     marginRight: 10
+  },
+  header: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "#FF4E00",
+    overflow: "hidden"
+    // height: HEADER_MAX_HEIGHT
+  },
+  bar: {
+    marginTop: 12,
+    // height: 32,
+    alignItems: "center",
+    justifyContent: "center"
+    // backgroundColor: "#00000050"
+  },
+  title: {
+    backgroundColor: "transparent",
+    color: "white",
+    fontSize: 25
+  },
+  scrollViewContent: {
+    marginTop: HEADER_MAX_HEIGHT
+  },
+  backgroundImage: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    width: null,
+    height: HEADER_MAX_HEIGHT,
+    resizeMode: "cover"
+  },
+  modalFilter: {
+    justifyContent: "center",
+    alignItems: "center",
+    // height: screenHeight / 2,
+    // width: screenWidth - 50,
+    borderRadius: 15
+    // backgroundColor: "white"
   }
+  // modalContentFilter: {
+  //   height: screenHeight - 50,
+  //   width: screenWidth - 50,
+  //   backgroundColor: "white",
+  //   borderRadius: 10,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   borderColor: "rgba(0, 0, 0, 0.1)"
+  // }
 });

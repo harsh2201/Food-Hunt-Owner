@@ -76,7 +76,7 @@ class Card extends Component {
     return (
       <View
         style={{
-          width: width - 40,
+          width: width - 30,
           height: CARDHEIGHT,
           marginVertical: 10,
           backgroundColor: "#fff",
@@ -190,7 +190,7 @@ class Card extends Component {
                       // marginTop: 10
                     }}
                   >
-                    {"Dinner  " + this.messData.lunch}
+                    {"Dinner  " + this.messData.dinner}
                   </Text>
                 </View>
               </View>
