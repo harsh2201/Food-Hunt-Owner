@@ -16,10 +16,56 @@ const CARD_WIDTH = width - 20;
 class Developers extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      data: [
+        {
+          name: "Harsh Jobanputra",
+          photo:
+            "https://firebasestorage.googleapis.com/v0/b/foodhunt-3c6a4.appspot.com/o/profile%2Fharsh.jpg?alt=media&token=a689c3dd-0864-4d08-897b-0d7a7f705716",
+          web: "",
+          insta: "",
+          linkedin: ""
+        },
+        {
+          name: "Karan Kathiriya",
+          photo: "",
+          web: "",
+          insta: "",
+          linkedin: ""
+        },
+        {
+          name: "Manan Gadhiya",
+          photo: "",
+          web: "",
+          insta: "",
+          linkedin: ""
+        },
+        {
+          name: "Vidhya Kothadiya",
+          photo: "",
+          web: "",
+          insta: "",
+          linkedin: ""
+        },
+        {
+          name: "Chirag Jethva",
+          photo: "",
+          web: "",
+          insta: "",
+          linkedin: ""
+        },
+        {
+          name: "Riya Intwala",
+          photo: "",
+          web: "",
+          insta: "",
+          linkedin: ""
+        }
+      ]
+    };
   }
 
-  _renderCard = () => {
+  _renderCard = (name, url) => {
     return (
       <View
         style={{
@@ -54,8 +100,7 @@ class Developers extends Component {
             // resizeMode: "contain"
           }}
           source={{
-            uri:
-              "https://firebasestorage.googleapis.com/v0/b/foodhunt-3c6a4.appspot.com/o/profile%2Fharsh.jpg?alt=media&token=a689c3dd-0864-4d08-897b-0d7a7f705716"
+            uri: url
           }}
         />
         <View
@@ -89,7 +134,7 @@ class Developers extends Component {
                 // textAlign: "center"
               }}
             >
-              Harsh Jobanputra
+              {name}
             </Text>
           </View>
           {/* ButtonContainer */}
@@ -154,10 +199,15 @@ class Developers extends Component {
             paddingBottom: 20
           }}
         >
-          {this._renderCard()}
-          {this._renderCard()}
-          {this._renderCard()}
-          {this._renderCard()}
+          {this._renderCard(
+            "Harsh Jobanputra",
+            "https://firebasestorage.googleapis.com/v0/b/foodhunt-3c6a4.appspot.com/o/profile%2Fharsh.jpg?alt=media&token=a689c3dd-0864-4d08-897b-0d7a7f705716"
+          )}
+          {this._renderCard("Karan Kathiriya", "")}
+          {this._renderCard("Manan Gadhiya", "")}
+          {this._renderCard("Vidhya Kothadiya", "")}
+          {this._renderCard("Chirag Jethva", "")}
+          {this._renderCard("Riya Intwala", "")}
         </ScrollView>
       </View>
     );

@@ -24,11 +24,53 @@ var varCurrentRating;
 const screenWidth = Math.round(Dimensions.get("window").width);
 const screenHeight = Math.round(Dimensions.get("window").height);
 class MessDetail extends Component {
-  componentDidMount() {
+  constructor() {
+    super();
+    this.state = {
+      fontLoaded: true,
+      Default_Rating: 2,
+      Max_Rating: 5,
+      children: [],
+      messOwner: [],
+      user: [],
+      activeItemIndex: 0,
+      unlimted: true,
+      limited: false,
+      rating_mess: 0,
+      total_users: 0,
+      current_rating: 0,
+      NUser: 0,
+      views: 0
+    };
+    this.Star =
+      "http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png";
+
+    this.Star_With_Border =
+      "http://aboutreact.com/wp-content/uploads/2018/08/star_corner.png";
+  }
+
+  async componentDidMount() {
     const { navigation } = this.props;
     let data = navigation.getParam("mess");
 
-    console.log(data);
+    this.setState({
+      views: data.views
+    });
+
+    let views = await firebase.database().ref("Owner/" + data.mid + "/views");
+    views.transaction(function(currView) {
+      // console.log("Views", currView);
+      return currView + 1;
+    });
+    views.on("value", snapshotV => {
+      let snap = JSON.stringify(snapshotV);
+      let views = JSON.parse(snap);
+      this.setState({
+        views: views
+      });
+    });
+
+    // console.log(data);
     firebase
       .database()
       .ref("Menu/" + data.mid + "/")
@@ -37,13 +79,13 @@ class MessDetail extends Component {
         async function(snapshot) {
           let snap = JSON.stringify(snapshot);
           data_mess = JSON.parse(snap);
-          console.log("Data messs", data_mess);
+          // console.log("Data messs", data_mess);
           var te = [];
           // console.log("TE", te);
           for (const dinn_lun in data_mess) {
             const name = dinn_lun;
             const element = data_mess[dinn_lun];
-            console.log("Image element", element);
+            // console.log("Image element", element);
             for (const imageUrl in element) {
               te.push({
                 time: name,
@@ -85,30 +127,6 @@ class MessDetail extends Component {
     header: null
   };
 
-  constructor() {
-    super();
-    this.state = {
-      fontLoaded: true,
-      Default_Rating: 2,
-      Max_Rating: 5,
-      children: [],
-      messOwner: [],
-      user: [],
-      activeItemIndex: 0,
-      unlimted: true,
-      limited: false,
-      rating_mess: 0,
-      total_users: 0,
-      current_rating: 0,
-      NUser: 0
-    };
-    this.Star =
-      "http://aboutreact.com/wp-content/uploads/2018/08/star_filled.png";
-
-    this.Star_With_Border =
-      "http://aboutreact.com/wp-content/uploads/2018/08/star_corner.png";
-  }
-
   UpdateRating(key) {
     this.setState({ Default_Rating: key });
   }
@@ -145,8 +163,8 @@ class MessDetail extends Component {
       .update({
         count: this.state.total_users
       });
-    console.log("Main current rating: " + this.state.current_rating);
-    console.log("Current user: " + this.state.NUser);
+    // console.log("Main current rating: " + this.state.current_rating);
+    // console.log("Current user: " + this.state.NUser);
     return (
       <View style={styles.safeArea}>
         <SafeAreaView>
@@ -191,7 +209,7 @@ class MessDetail extends Component {
                       // textStyle: "italic"
                     }}
                   >
-                    215
+                    {this.state.views}
                   </Text>
                 </View>
               </View>
@@ -245,17 +263,17 @@ class MessDetail extends Component {
                     .database()
                     .ref("Rating/" + data.mid + "/")
                     .on("value", snapshot => {
-                      console.log("Rated rating: " + this.state.Default_Rating);
-                      console.log("Current Users: " + this.state.NUser);
+                      // console.log("Rated rating: " + this.state.Default_Rating);
+                      // console.log("Current Users: " + this.state.NUser);
 
                       varCurrentRating =
                         (this.state.current_rating * this.state.NUser +
                           this.state.Default_Rating) /
                         (this.state.NUser + 1);
                       varCurrentRating = varCurrentRating.toFixed(1);
-                      console.log(
-                        "After Updation of Rating: " + varCurrentRating
-                      );
+                      // console.log(
+                      //   "After Updation of Rating: " + varCurrentRating
+                      // );
                     })
                     .bind(this);
                   firebase

@@ -43,7 +43,9 @@ export default class ScrollSwagger extends Component {
       isModalVisible: false,
       searchQuery: "",
       scrollY: new Animated.Value(0),
-      searchResult: []
+      searchResult: [],
+      topViews: [],
+      isFilterVisible: false
     };
   }
 
@@ -111,8 +113,8 @@ export default class ScrollSwagger extends Component {
             te.push({
               name: element.name,
               mid: element.Credentials.mid,
-              mid: element.Credentials.mid,
-              time: element.time.lunch.open + " - " + element.time.lunch.close,
+              // mid: element.Credentials.mid,
+              lunch: element.time.lunch.open + " - " + element.time.lunch.close,
               email: element.Contact.email,
               mobileNo: element.Contact.mobileNo,
               profileUrl: element.profileUrl,
@@ -184,12 +186,21 @@ export default class ScrollSwagger extends Component {
   //   });
   // };
 
+  _renderFilter = () => {
+    return (
+      <View
+        style={{ height: "100%", width: "100%", backgroundColor: "red" }}
+      ></View>
+    );
+  };
+
   _renderItem = ({ item, index }, parallaxProps) => {
     return (
       <TouchableOpacity
         onPress={() => {
           this.props.navigation.navigate("MessDetail", { mess: item });
         }}
+        activeOpacity={1}
         style={styles.item}
       >
         <ParallaxImage
@@ -256,7 +267,7 @@ export default class ScrollSwagger extends Component {
     });
     var searchHeight = this.state.scrollY.interpolate({
       inputRange: [0, 180, 181],
-      outputRange: [SEARCHBARHEIGHT, SEARCHBARHEIGHT + 20, SEARCHBARHEIGHT + 20]
+      outputRange: [SEARCHBARHEIGHT, SEARCHBARHEIGHT, SEARCHBARHEIGHT]
     });
     var searchMarginH = this.state.scrollY.interpolate({
       inputRange: [0, 180, 181],
@@ -273,8 +284,8 @@ export default class ScrollSwagger extends Component {
     return (
       <View style={{ flex: 1 }}>
         <ImageBackground
-          style={{ flex: 1 }}
-          source={require("../assets/back1.png")}
+          style={{ flex: 1, backgroundColor: "#f5f5f5" }}
+          // source={require("../assets/back1.png")}
         >
           {/* List Items */}
           {this.state.isModalVisible ? (
@@ -367,7 +378,18 @@ export default class ScrollSwagger extends Component {
                     backgroundColor: "white",
                     borderRadius: 4,
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
+                    shadowColor: "#000",
+                    shadowOffset: {
+                      width: 0,
+                      height: 5
+                    },
+                    shadowOpacity: 0.36,
+                    shadowRadius: 6.68,
+                    elevation: 11
+                  }}
+                  onPress={() => {
+                    this.setState({ isFilterVisible: true });
                   }}
                 >
                   <Image
@@ -398,6 +420,41 @@ export default class ScrollSwagger extends Component {
                   autoPlay={true}
                   loop={true}
                 />
+              </View>
+            </Modal>
+          ) : (
+            <View />
+          )}
+          {true ? (
+            <Modal
+              isVisible={this.state.isFilterVisible}
+              backdropColor="#000"
+              backdropOpacity={0.8}
+              animationIn="zoomInDown"
+              animationOut="zoomOutUp"
+              animationInTiming={600}
+              animationOutTiming={600}
+              backdropTransitionInTiming={800}
+              backdropTransitionOutTiming={800}
+              style={styles.modalFilter}
+              onBackButtonPress={() => {
+                this.setState({
+                  isFilterVisible: false
+                });
+              }}
+              onDismiss={() => {
+                this.setState({
+                  isFilterVisible: false
+                });
+              }}
+              onBackdropPress={() => {
+                this.setState({
+                  isFilterVisible: false
+                });
+              }}
+            >
+              <View style={styles.modalContentFilter}>
+                {this._renderFilter()}
               </View>
             </Modal>
           ) : (
@@ -445,6 +502,7 @@ export default class ScrollSwagger extends Component {
           return (
             <TouchableOpacity
               key={rowData.name}
+              activeOpacity={1}
               onPress={() => {
                 this.props.navigation.navigate("MessDetail", { mess: rowData });
               }}
@@ -490,6 +548,19 @@ const styles = StyleSheet.create({
   modalContent: {
     height: 100,
     width: 150,
+    backgroundColor: "white",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "rgba(0, 0, 0, 0.1)"
+  },
+  modalFilter: {
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  modalContentFilter: {
+    height: height / 2,
+    width: width - 50,
     backgroundColor: "white",
     borderRadius: 10,
     justifyContent: "center",
